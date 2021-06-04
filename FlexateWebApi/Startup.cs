@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,11 +29,25 @@ namespace FlexateWebApi
         {
             services.AddInfrastructure(Configuration);
             services.AddControllers();
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            services.AddSwaggerGen(c =>
             {
-                Title = "WebApplication",
-                Version = "v1"
-            }));
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Title = "WebApplication",
+                    Version = "v1",
+                    Description = "A simple web application",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new Microsoft.OpenApi.Models.OpenApiContact
+                    {
+                        Name = "Jakub",
+                        Email = string.Empty
+                    }
+                });
+                var filePath = Path.Combine(AppContext.BaseDirectory, "FlexateWebApi.xml");
+                c.IncludeXmlComments(filePath);
+            });
+
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,7 +60,7 @@ namespace FlexateWebApi
                     "WebApplcation"));
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseHealthChecks("/hc");
             app.UseHttpsRedirection();
 
             app.UseRouting();
