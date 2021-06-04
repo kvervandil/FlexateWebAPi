@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FlexateWebApi.Application.Interfaces;
+using FlexateWebApi.Domain;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +11,18 @@ using System.Threading.Tasks;
 
 namespace FlexateWebApi.Controllers
 {
-    /*[Route("api/person")]
-    [ApiController]*/
-    public class PersonController : Controller
+    [Route("api/person")]
+    [ApiController]
+    public class PersonController : ControllerBase
     {
-        private static readonly string[] People = new[]
+        private readonly IPersonService _personService;
+        public readonly ILogger<PersonController> _logger;
+
+        public PersonController(IPersonService personService ,ILogger<PersonController> logger)
         {
-            "Piotr", "Marcin", "Johny", "Mariusz", "Sandra", "Iza", "Bartek"
-        };
+            _personService = personService;
+            _logger = logger;
+        }
 
         /// <summary>
         /// Get all peoples
@@ -23,77 +31,88 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Get()
+        public IList<Person> Index()
         {
-            return View();
+            _logger.LogInformation("we are in Index action");
+
+            var model = _personService.GetAllPeople(10, 1, string.Empty);
+
+            return model.ToArray();
         }
 
+        /// <summary>
+        /// Get all peoples
+        /// </summary>
+        /// <returns></returns>
         // GET: PersonController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public string Details(int id)
         {
-            return View();
+            return string.Empty;
         }
 
         // GET: PersonController/Create
-        public ActionResult Create()
+        public string Create()
         {
-            return View();
+            return string.Empty;
         }
 
         // POST: PersonController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public int Create(IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                return 1;
             }
             catch
             {
-                return View();
+                return 0;
             }
         }
 
         // GET: PersonController/Edit/5
-        public ActionResult Edit(int id)
+        public string Edit(int id)
         {
-            return View();
+            return string.Empty;
         }
 
         // POST: PersonController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public int Edit(int id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                return 1;
             }
             catch
             {
-                return View();
+                return 0;
             }
         }
 
         // GET: PersonController/Delete/5
-        public ActionResult Delete(int id)
+        public string Delete(int id)
         {
-            return View();
+            return string.Empty;
         }
 
         // POST: PersonController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public void Delete(int id, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+
             }
             catch
             {
-                return View();
+                
             }
         }
     }

@@ -1,3 +1,4 @@
+using FlexateWebApi.Application;
 using FlexateWebApi.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,7 @@ namespace FlexateWebApi
             }));
 
             services.AddInfrastructure(Configuration);
+            services.AddApplication();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -58,8 +60,9 @@ namespace FlexateWebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddFile("Logs/myLog-{Date}.txt");
             if (env.IsDevelopment())
             {
                 app.UseSwagger();

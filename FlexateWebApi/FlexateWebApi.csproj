@@ -10,10 +10,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.6" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FlexateWebApi.Application\FlexateWebApi.Application.csproj" />
+    <ProjectReference Include="..\FlexateWebApi.Domain\FlexateWebApi.Domain.csproj" />
     <ProjectReference Include="..\FlexateWebApi.Infrastructure\FlexateWebApi.Infrastructure.csproj" />
   </ItemGroup>
 
