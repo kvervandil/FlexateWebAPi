@@ -9,6 +9,19 @@
             Get all peoples
             </summary>
             <returns></returns>
+            
+        </member>
+        <member name="M:FlexateWebApi.Controllers.PersonController.Details(System.Int32)">
+            <summary>
+            Get person by id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FlexateWebApi.Controllers.PersonController.Create(System.String)">
+            <summary>
+            Create new person
+            </summary>
+            <returns></returns>
         </member>
     </members>
 </doc>

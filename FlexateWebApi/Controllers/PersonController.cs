@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace FlexateWebApi.Controllers
 {
-    [Route("api/person")]
     [ApiController]
+    [EnableCors("MyAllowSpecificOrigins")]
     public class PersonController : ControllerBase
     {
         private readonly IPersonService _personService;
@@ -28,6 +28,8 @@ namespace FlexateWebApi.Controllers
         /// Get all peoples
         /// </summary>
         /// <returns></returns>
+        /// 
+        [Route("api/person")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -41,26 +43,43 @@ namespace FlexateWebApi.Controllers
         }
 
         /// <summary>
-        /// Get all peoples
+        /// Get person by id
         /// </summary>
         /// <returns></returns>
         // GET: PersonController/Details/5
+        [Route("api/person/details/{id}")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public string Details(int id)
+        public Person Details(int id)
         {
-            return string.Empty;
+            var person = _personService.GetPersonById(id);
+
+            return person;
         }
 
-        // GET: PersonController/Create
-        public string Create()
+        /// <summary>
+        /// Create new person
+        /// </summary>
+        /// <returns></returns>
+        // POST: PersonController/Create
+        [Route("api/person/create/{name}")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        //GET: PersonController/Create
+        public int Create(string name)
         {
-            return string.Empty;
+            var person = _personService.AddNewPerson(name);
+
+            //to test
+            var people = _personService.GetCurrentPeopleList();
+
+            return person.Id;
         }
 
         // POST: PersonController/Create
-        [HttpPost]
+        /*[HttpPost]
         [ValidateAntiForgeryToken]
         public int Create(IFormCollection collection)
         {
@@ -72,19 +91,27 @@ namespace FlexateWebApi.Controllers
             {
                 return 0;
             }
-        }
+        }*/
 
         // GET: PersonController/Edit/5
-        public string Edit(int id)
+        /*public string Edit(int id)
         {
             return string.Empty;
-        }
+        }*/
 
         // POST: PersonController/Edit/5
-        [HttpPost]
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ValidateAntiForgeryToken]
-        public int Edit(int id, IFormCollection collection)
+        public int Edit(int id, Person person)
         {
+            //todo
+            var personToUpdate = _personService.GetPersonById(id);
+
+            _personService.UpdatePerson(personToUpdate, person);
+
             try
             {
                 return 1;
@@ -96,13 +123,13 @@ namespace FlexateWebApi.Controllers
         }
 
         // GET: PersonController/Delete/5
-        public string Delete(int id)
+        /*public string Delete(int id)
         {
             return string.Empty;
-        }
+        }*/
 
         // POST: PersonController/Delete/5
-        [HttpPost]
+        /*[HttpPost]
         [ValidateAntiForgeryToken]
         public void Delete(int id, IFormCollection collection)
         {
@@ -114,6 +141,6 @@ namespace FlexateWebApi.Controllers
             {
                 
             }
-        }
+        }*/
     }
 }

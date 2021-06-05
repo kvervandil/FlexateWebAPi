@@ -24,5 +24,43 @@ namespace FlexateWebApi.Application.Services
 
             return peopleToShow;
         }
+
+        public Person GetPersonById(int id)
+        {
+            var person = People.FirstOrDefault(e => e.Id == id);
+
+            return person;
+        }
+
+        public Person AddNewPerson(string name)
+        {
+            Person person = new Person()
+            {
+                Name = name,
+                IsDeleted = false,
+                Id = GetLastPersonId() + 1
+            };
+
+            People.Add(person);
+
+            return person;
+        }
+
+        private int GetLastPersonId()
+        {
+            int lastId = People.LastOrDefault().Id;
+
+            return lastId;
+        }
+
+        public IList<Person> GetCurrentPeopleList()
+        {
+            return People;
+        }
+
+        public void UpdatePerson(Person personToUpdate, Person person)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
