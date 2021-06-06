@@ -1,24 +1,28 @@
-﻿using FlexateWebApi.Application.Interfaces;
+﻿using FlexateWebApi.Application.Dto;
+using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlexateWebApi.Controllers
-{
-    [ApiController]
-    [EnableCors("MyAllowSpecificOrigins")]
+{    
+    /// <summary>
+    /// crud operations on Person
+    /// </summary>
+    [Route("api/person")]
     public class PersonController : ControllerBase
     {
         private readonly IPersonService _personService;
         public readonly ILogger<PersonController> _logger;
 
-        public PersonController(IPersonService personService ,ILogger<PersonController> logger)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="personService"></param>
+        /// <param name="logger"></param>
+        public PersonController(IPersonService personService, ILogger<PersonController> logger)
         {
             _personService = personService;
             _logger = logger;
@@ -28,119 +32,92 @@ namespace FlexateWebApi.Controllers
         /// Get all peoples
         /// </summary>
         /// <returns></returns>
-        /// 
-        [Route("api/person")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IList<Person> Index()
+        public ActionResult<IList<Person>> Index()
         {
             _logger.LogInformation("we are in Index action");
 
             var model = _personService.GetAllPeople(10, 1, string.Empty);
 
-            return model.ToArray();
+            return Ok(model);
         }
 
         /// <summary>
         /// Get person by id
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        // GET: PersonController/Details/5
-        [Route("api/person/details/{id}")]
+        // GET: PersonController//5
+        [Route("{id}")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public Person Details(int id)
+        public ActionResult<Person>Details(int id)
         {
             var person = _personService.GetPersonById(id);
 
-            return person;
+            return Ok(person);
         }
 
         /// <summary>
         /// Create new person
         /// </summary>
+        /// <param name="personDto"></param>
         /// <returns></returns>
         // POST: PersonController/Create
-        [Route("api/person/create/{name}")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        //GET: PersonController/Create
-        public int Create(string name)
+        public ActionResult Create([FromBody]CreatePersonDto personDto)
         {
-            var person = _personService.AddNewPerson(name);
+            var person = _personService.AddNewPerson(personDto);
 
-            //to test
-            var people = _personService.GetCurrentPeopleList();
-
-            return person.Id;
+            return Created($"api/person/{person.Id}", person.Id);
         }
 
-        // POST: PersonController/Create
-        /*[HttpPost]
-        [ValidateAntiForgeryToken]
-        public int Create(IFormCollection collection)
-        {
-            try
-            {
-                return 1;
-            }
-            catch
-            {
-                return 0;
-            }
-        }*/
-
-        // GET: PersonController/Edit/5
-        /*public string Edit(int id)
-        {
-            return string.Empty;
-        }*/
-
-        // POST: PersonController/Edit/5
-
-        [HttpPut]
+        // Patch: PersonController/Edit/5
+        /// <summary>
+        /// update existing person
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="personDto"></param>
+        /// <returns></returns>
+        [HttpPatch]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ValidateAntiForgeryToken]
-        public int Edit(int id, Person person)
+        [Route("{id}")]
+        public ActionResult Edit(int id, [FromBody]UpdatePersonDto personDto)
         {
-            //todo
-            var personToUpdate = _personService.GetPersonById(id);
-
-            _personService.UpdatePerson(personToUpdate, person);
-
             try
             {
-                return 1;
+                _personService.UpdatePerson(id, personDto);
+
+                return NoContent();
             }
             catch
             {
-                return 0;
+                return NotFound();
             }
         }
 
-        // GET: PersonController/Delete/5
-        /*public string Delete(int id)
-        {
-            return string.Empty;
-        }*/
-
-        // POST: PersonController/Delete/5
-        /*[HttpPost]
-        [ValidateAntiForgeryToken]
-        public void Delete(int id, IFormCollection collection)
+        // Delete: PersonController/Delete/5
+        /// <summary>
+        /// Delete existing person
+        /// </summary>
+        /// <param name="id"></param>
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [Route("{id}")]
+        public ActionResult Delete(int id)
         {
             try
             {
+                _personService.DeletePerson(id);
 
+                return NoContent();
             }
             catch
             {
-                
+                return NotFound();
             }
-        }*/
+        }
     }
 }

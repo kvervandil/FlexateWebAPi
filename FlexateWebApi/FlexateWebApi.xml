@@ -4,6 +4,13 @@
         <name>FlexateWebApi</name>
     </assembly>
     <members>
+        <member name="M:FlexateWebApi.Controllers.PersonController.#ctor(FlexateWebApi.Application.Interfaces.IPersonService,Microsoft.Extensions.Logging.ILogger{FlexateWebApi.Controllers.PersonController})">
+            <summary>
+            
+            </summary>
+            <param name="personService"></param>
+            <param name="logger"></param>
+        </member>
         <member name="M:FlexateWebApi.Controllers.PersonController.Index">
             <summary>
             Get all peoples
@@ -17,11 +24,25 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:FlexateWebApi.Controllers.PersonController.Create(System.String)">
+        <member name="M:FlexateWebApi.Controllers.PersonController.Create(FlexateWebApi.Application.Dto.CreatePersonDto)">
             <summary>
             Create new person
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:FlexateWebApi.Controllers.PersonController.Edit(System.Int32,FlexateWebApi.Application.Dto.UpdatePersonDto)">
+            <summary>
+            update existing person
+            </summary>
+            <param name="id"></param>
+            <param name="personDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlexateWebApi.Controllers.PersonController.Delete(System.Int32)">
+            <summary>
+            Delete existing person
+            </summary>
+            <param name="id"></param>
         </member>
     </members>
 </doc>

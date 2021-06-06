@@ -1,4 +1,5 @@
-﻿using FlexateWebApi.Application.Interfaces;
+﻿using FlexateWebApi.Application.Dto;
+using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain;
 using System;
 using System.Collections.Generic;
@@ -32,11 +33,11 @@ namespace FlexateWebApi.Application.Services
             return person;
         }
 
-        public Person AddNewPerson(string name)
+        public Person AddNewPerson(CreatePersonDto personDto)
         {
             Person person = new Person()
             {
-                Name = name,
+                Name = personDto.Name,
                 IsDeleted = false,
                 Id = GetLastPersonId() + 1
             };
@@ -53,14 +54,21 @@ namespace FlexateWebApi.Application.Services
             return lastId;
         }
 
-        public IList<Person> GetCurrentPeopleList()
+        public void UpdatePerson(int personToUpdateId, UpdatePersonDto personDto)
         {
-            return People;
+            var personToUpdate = People.FirstOrDefault(p => p.Id == personToUpdateId);
+
+            personToUpdate.Name = personDto.Name;
         }
 
-        public void UpdatePerson(Person personToUpdate, Person person)
+        public void DeletePerson(int id)
         {
-            throw new NotImplementedException();
+            var person = People.FirstOrDefault(person => person.Id == id);
+
+            if (person != null)
+            {
+                People.Remove(person);
+            }
         }
     }
 }

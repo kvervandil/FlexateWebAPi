@@ -1,4 +1,5 @@
-﻿using FlexateWebApi.Domain;
+﻿using FlexateWebApi.Application.Dto;
+using FlexateWebApi.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,8 +10,8 @@ namespace FlexateWebApi.Application.Interfaces
     {
         IList<Person> GetAllPeople(int pageSize, int pageNo, string searchString);
         Person GetPersonById(int id);
-        Person AddNewPerson(string name);
-        IList<Person> GetCurrentPeopleList();
-        void UpdatePerson(Person personToUpdate, Person person);
+        Person AddNewPerson(CreatePersonDto personDto);
+        void UpdatePerson(int personToUpdateId, UpdatePersonDto personDto);
+        void DeletePerson(int id);
     }
 }
