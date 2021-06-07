@@ -16,7 +16,7 @@
             <param name="personService"></param>
             <param name="logger"></param>
         </member>
-        <member name="M:FlexateWebApi.Controllers.PeopleController.Get">
+        <member name="M:FlexateWebApi.Controllers.PeopleController.Get(System.String,System.Int32,System.Int32)">
             <summary>
             Get all people
             </summary>
@@ -38,13 +38,19 @@
             <param name="personDto"></param>
             <returns></returns>
         </member>
-        <member name="M:FlexateWebApi.Controllers.PeopleController.Update(System.Int32,FlexateWebApi.Application.Dto.UpdatePersonDto)">
+        <member name="M:FlexateWebApi.Controllers.PeopleController.Put(System.Int32,FlexateWebApi.Application.Dto.UpdatePersonDto)">
             <summary>
             Update existing person
             </summary>
             <param name="id"></param>
             <param name="personDto"></param>
             <returns></returns>
+        </member>
+        <member name="M:FlexateWebApi.Controllers.PeopleController.Patch(System.Int32)">
+            <summary>
+            Update one property in person entity
+            </summary>
+            <param name="id"></param>
         </member>
         <member name="M:FlexateWebApi.Controllers.PeopleController.Delete(System.Int32)">
             <summary>

@@ -9,10 +9,11 @@ namespace FlexateWebApi.Application.Interfaces
 {
     public interface IPeopleService
     {
-        Task<IList<Person>> GetAllPeople(int pageSize, int pageNo, string searchString);
+        Task<PeopleForListDto> GetPeople(int pageSize, int pageNo, string searchString);
         Person GetPersonById(int id);
         Person AddNewPerson(CreatePersonDto personDto);
-        void UpdatePerson(int personToUpdateId, UpdatePersonDto personDto);
-        void DeletePerson(int id);
+        bool UpdatePerson(int personToUpdateId, UpdatePersonDto personDto);
+        bool DeletePerson(int id);
+        bool UpdateWithDeleteFlag(int id);
     }
 }

@@ -4,6 +4,7 @@ using FlexateWebApi.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -36,11 +37,17 @@ namespace FlexateWebApi.Controllers
         /// 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IList<Person>>> Get()
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<PeopleForListDto>> Get(string searchString = "", int pageSize = 10, int pageNo = 1)
         {
             _logger.LogInformation("we are in Index action");
 
-            var model = await _peopleService.GetAllPeople(10, 1, string.Empty);
+            var model = await _peopleService.GetPeople(pageSize, pageNo, searchString);
+
+            if (model.Count == 0)
+            {
+                return NotFound();
+            }
 
             return Ok(model);
         }
@@ -55,9 +62,15 @@ namespace FlexateWebApi.Controllers
         [Route("{id}")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Person> Get(int id)
         {
             var person = _peopleService.GetPersonById(id);
+
+            if (person == null)
+            {
+                return NotFound();
+            }
 
             return Ok(person);
         }
@@ -70,35 +83,60 @@ namespace FlexateWebApi.Controllers
         // POST: PersonController/Create
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult Create([FromBody]CreatePersonDto personDto)
         {
             var person = _peopleService.AddNewPerson(personDto);
 
+            if (person == null)
+            {
+                return BadRequest();
+            }
+
             return Created($"api/person/{person.Id}", person.Id);
         }
 
-        // Patch: PersonController/Edit/5
+        // Put: PersonController/Edit/5
         /// <summary>
         /// Update existing person
         /// </summary>
         /// <param name="id"></param>
         /// <param name="personDto"></param>
         /// <returns></returns>
-        [HttpPatch]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
-        public ActionResult Update(int id, [FromBody]UpdatePersonDto personDto)
+        public ActionResult Put(int id, [FromBody]UpdatePersonDto personDto)
         {
-            try
-            {
-                _peopleService.UpdatePerson(id, personDto);
+            var result = _peopleService.UpdatePerson(id, personDto);
 
+            if (result)
+            {
                 return NoContent();
             }
-            catch
+
+            return NotFound();            
+        }
+
+        /// <summary>
+        /// Update one property in person entity
+        /// </summary>
+        /// <param name="id"></param>
+        [HttpPatch]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("{id}")]
+        public ActionResult Patch(int id)
+        {
+            var result = _peopleService.UpdateWithDeleteFlag(id);
+
+            if (result)
             {
-                return NotFound();
+                return NoContent();
             }
+
+            return NotFound();
         }
 
         // Delete: PersonController/Delete/5
@@ -108,19 +146,17 @@ namespace FlexateWebApi.Controllers
         /// <param name="id"></param>
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
         public ActionResult Delete(int id)
         {
-            try
-            {
-                _peopleService.DeletePerson(id);
+            var result = _peopleService.DeletePerson(id);
 
+            if (result)
+            {
                 return NoContent();
             }
-            catch
-            {
-                return NotFound();
-            }
+            return NotFound();            
         }
     }
 }

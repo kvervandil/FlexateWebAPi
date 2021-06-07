@@ -18,13 +18,43 @@ namespace FlexateWebApi.Application.Services
             People = Entity.InitializePeople();
         }
 
-        public async Task<IList<Person>> GetAllPeople(int pageSize, int pageNo, string searchString)
+        public async Task<PeopleForListDto> GetPeople(int pageSize, int pageNo, string searchString)
         {
             var people = People.Where(p => p.Name.StartsWith(searchString));
 
-            var peopleToShow = people.Skip(pageSize * (pageNo - 1)).Take(pageSize).ToList();
+            List<PersonForListDto> ListForPeople = new List<PersonForListDto>();
 
-            return await Task.FromResult(peopleToShow);
+            foreach (var person in people)
+            {
+                ListForPeople.Add(new PersonForListDto() { Id = person.Id, Name = person.Name });
+            }
+
+            var prevPage = 1;
+            if (pageNo > 1)
+            {
+                prevPage = pageNo - 1;
+            }
+
+            var nextPage = pageNo + 1;
+
+            var temp1 = (double)People.Count / pageSize;
+            var noOfPages = (int)Math.Round((double)People.Count / pageSize);
+
+            var peopleToShow = ListForPeople.Skip(pageSize * (pageNo - 1)).Take(pageSize).ToList();
+
+            var model = new PeopleForListDto()
+            {
+                PeopleList = peopleToShow,
+                CurrentPage = pageNo,
+                PageSize = pageSize,
+                SearchString = searchString,
+                Count = People.Count,
+                PrevPage = prevPage,
+                NextPage = nextPage,
+                NoOfPage = noOfPages
+            };
+
+            return await Task.FromResult(model);
         }
 
         public Person GetPersonById(int id)
@@ -43,7 +73,10 @@ namespace FlexateWebApi.Application.Services
                 Id = GetLastPersonId() + 1
             };
 
-            People.Add(person);
+            if (person != null)
+            {
+                People.Add(person);
+            }
 
             return person;
         }
@@ -55,21 +88,45 @@ namespace FlexateWebApi.Application.Services
             return lastId;
         }
 
-        public void UpdatePerson(int personToUpdateId, UpdatePersonDto personDto)
+        public bool UpdatePerson(int personToUpdateId, UpdatePersonDto personDto)
         {
             var personToUpdate = People.FirstOrDefault(p => p.Id == personToUpdateId);
 
+            if (personToUpdate == null)
+            {
+                return false;
+            }
+
             personToUpdate.Name = personDto.Name;
+            personToUpdate.Address = personDto.Address;
+            personToUpdate.Age = personDto.Age;
+            return true;
         }
 
-        public void DeletePerson(int id)
+        public bool DeletePerson(int id)
         {
             var person = People.FirstOrDefault(person => person.Id == id);
 
-            if (person != null)
+            if (person == null)
             {
-                People.Remove(person);
+                return false;
             }
+            
+            People.Remove(person);
+            return true;
+        }
+
+        public bool UpdateWithDeleteFlag(int id)
+        {
+            var person = People.FirstOrDefault(person => person.Id == id);
+
+            if (person == null)
+            {
+                return false;
+            }
+
+            person.IsDeleted = !person.IsDeleted;
+            return true;
         }
     }
 }
