@@ -11,7 +11,7 @@ namespace FlexateWebApi.Application
     {    
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddTransient<IPersonService, PersonService>();
+            services.AddTransient<IPeopleService, PeopleService>();
 
             return services;
         }

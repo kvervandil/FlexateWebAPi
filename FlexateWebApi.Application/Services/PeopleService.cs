@@ -5,25 +5,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FlexateWebApi.Application.Services
 {
-    public class PersonService : IPersonService
+    public class PeopleService : IPeopleService
     {
         public IList<Person> People { get; set; }
 
-        public PersonService()
+        public PeopleService()
         {
             People = Entity.InitializePeople();
         }
 
-        public IList<Person> GetAllPeople(int pageSize, int pageNo, string searchString)
+        public async Task<IList<Person>> GetAllPeople(int pageSize, int pageNo, string searchString)
         {
             var people = People.Where(p => p.Name.StartsWith(searchString));
 
             var peopleToShow = people.Skip(pageSize * (pageNo - 1)).Take(pageSize).ToList();
 
-            return peopleToShow;
+            return await Task.FromResult(peopleToShow);
         }
 
         public Person GetPersonById(int id)

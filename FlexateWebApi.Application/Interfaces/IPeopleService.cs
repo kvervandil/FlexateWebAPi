@@ -3,12 +3,13 @@ using FlexateWebApi.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FlexateWebApi.Application.Interfaces
 {
-    public interface IPersonService
+    public interface IPeopleService
     {
-        IList<Person> GetAllPeople(int pageSize, int pageNo, string searchString);
+        Task<IList<Person>> GetAllPeople(int pageSize, int pageNo, string searchString);
         Person GetPersonById(int id);
         Person AddNewPerson(CreatePersonDto personDto);
         void UpdatePerson(int personToUpdateId, UpdatePersonDto personDto);

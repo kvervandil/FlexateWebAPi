@@ -5,40 +5,42 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FlexateWebApi.Controllers
 {    
     /// <summary>
     /// crud operations on Person
     /// </summary>
-    [Route("api/person")]
-    public class PersonController : ControllerBase
+    [Route("api/people")]
+    public class PeopleController : ControllerBase
     {
-        private readonly IPersonService _personService;
-        public readonly ILogger<PersonController> _logger;
+        private readonly IPeopleService _peopleService;
+        public readonly ILogger<PeopleController> _logger;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="personService"></param>
         /// <param name="logger"></param>
-        public PersonController(IPersonService personService, ILogger<PersonController> logger)
+        public PeopleController(IPeopleService personService, ILogger<PeopleController> logger)
         {
-            _personService = personService;
+            _peopleService = personService;
             _logger = logger;
         }
 
         /// <summary>
-        /// Get all peoples
+        /// Get all people
         /// </summary>
         /// <returns></returns>
+        /// 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IList<Person>> Index()
+        public async Task<ActionResult<IList<Person>>> Get()
         {
             _logger.LogInformation("we are in Index action");
 
-            var model = _personService.GetAllPeople(10, 1, string.Empty);
+            var model = await _peopleService.GetAllPeople(10, 1, string.Empty);
 
             return Ok(model);
         }
@@ -47,14 +49,15 @@ namespace FlexateWebApi.Controllers
         /// Get person by id
         /// </summary>
         /// <param name="id"></param>
+        /// 
         /// <returns></returns>
-        // GET: PersonController//5
+        // GET: PersonController/5
         [Route("{id}")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<Person>Details(int id)
+        public ActionResult<Person> Get(int id)
         {
-            var person = _personService.GetPersonById(id);
+            var person = _peopleService.GetPersonById(id);
 
             return Ok(person);
         }
@@ -69,14 +72,14 @@ namespace FlexateWebApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult Create([FromBody]CreatePersonDto personDto)
         {
-            var person = _personService.AddNewPerson(personDto);
+            var person = _peopleService.AddNewPerson(personDto);
 
             return Created($"api/person/{person.Id}", person.Id);
         }
 
         // Patch: PersonController/Edit/5
         /// <summary>
-        /// update existing person
+        /// Update existing person
         /// </summary>
         /// <param name="id"></param>
         /// <param name="personDto"></param>
@@ -84,11 +87,11 @@ namespace FlexateWebApi.Controllers
         [HttpPatch]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Route("{id}")]
-        public ActionResult Edit(int id, [FromBody]UpdatePersonDto personDto)
+        public ActionResult Update(int id, [FromBody]UpdatePersonDto personDto)
         {
             try
             {
-                _personService.UpdatePerson(id, personDto);
+                _peopleService.UpdatePerson(id, personDto);
 
                 return NoContent();
             }
@@ -110,7 +113,7 @@ namespace FlexateWebApi.Controllers
         {
             try
             {
-                _personService.DeletePerson(id);
+                _peopleService.DeletePerson(id);
 
                 return NoContent();
             }
