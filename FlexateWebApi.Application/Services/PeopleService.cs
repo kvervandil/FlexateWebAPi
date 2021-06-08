@@ -57,14 +57,14 @@ namespace FlexateWebApi.Application.Services
             return await Task.FromResult(model);
         }
 
-        public Person GetPersonById(int id)
+        public async Task<Person> GetPersonById(int id)
         {
             var person = People.FirstOrDefault(e => e.Id == id);
 
-            return person;
+            return await Task.FromResult(person);
         }
 
-        public Person AddNewPerson(CreatePersonDto personDto)
+        public async Task<Person> AddNewPerson(CreatePersonDto personDto)
         {
             Person person = new Person()
             {
@@ -78,7 +78,7 @@ namespace FlexateWebApi.Application.Services
                 People.Add(person);
             }
 
-            return person;
+            return await Task.FromResult(person);
         }
 
         private int GetLastPersonId()
@@ -88,7 +88,7 @@ namespace FlexateWebApi.Application.Services
             return lastId;
         }
 
-        public bool UpdatePerson(int personToUpdateId, UpdatePersonDto personDto)
+        public async Task<bool> UpdatePerson(int personToUpdateId, UpdatePersonDto personDto)
         {
             var personToUpdate = People.FirstOrDefault(p => p.Id == personToUpdateId);
 
@@ -100,10 +100,11 @@ namespace FlexateWebApi.Application.Services
             personToUpdate.Name = personDto.Name;
             personToUpdate.Address = personDto.Address;
             personToUpdate.Age = personDto.Age;
-            return true;
+
+            return await Task.FromResult(true);
         }
 
-        public bool DeletePerson(int id)
+        public async Task<bool> DeletePerson(int id)
         {
             var person = People.FirstOrDefault(person => person.Id == id);
 
@@ -113,10 +114,11 @@ namespace FlexateWebApi.Application.Services
             }
             
             People.Remove(person);
-            return true;
+
+            return await Task.FromResult(true);
         }
 
-        public bool UpdateWithDeleteFlag(int id)
+        public async Task<bool> UpdateWithDeleteFlag(int id)
         {
             var person = People.FirstOrDefault(person => person.Id == id);
 
@@ -126,7 +128,8 @@ namespace FlexateWebApi.Application.Services
             }
 
             person.IsDeleted = !person.IsDeleted;
-            return true;
+
+            return await Task.FromResult(true);
         }
     }
 }

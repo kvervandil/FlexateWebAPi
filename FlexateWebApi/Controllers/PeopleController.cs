@@ -4,8 +4,7 @@ using FlexateWebApi.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FlexateWebApi.Controllers
@@ -28,6 +27,8 @@ namespace FlexateWebApi.Controllers
         {
             _peopleService = personService;
             _logger = logger;
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
         }
 
         /// <summary>
@@ -63,9 +64,9 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Person> Get(int id)
+        public async Task<ActionResult<Person>> Get(int id)
         {
-            var person = _peopleService.GetPersonById(id);
+            var person = await _peopleService.GetPersonById(id);
 
             if (person == null)
             {
@@ -84,9 +85,9 @@ namespace FlexateWebApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult Create([FromBody]CreatePersonDto personDto)
+        public async Task<ActionResult> Create([FromBody]CreatePersonDto personDto)
         {
-            var person = _peopleService.AddNewPerson(personDto);
+            var person = await _peopleService.AddNewPerson(personDto);
 
             if (person == null)
             {
@@ -107,9 +108,9 @@ namespace FlexateWebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
-        public ActionResult Put(int id, [FromBody]UpdatePersonDto personDto)
+        public async Task<ActionResult> Put(int id, [FromBody]UpdatePersonDto personDto)
         {
-            var result = _peopleService.UpdatePerson(id, personDto);
+            var result = await _peopleService.UpdatePerson(id, personDto);
 
             if (result)
             {
@@ -127,16 +128,13 @@ namespace FlexateWebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
-        public ActionResult Patch(int id)
+        public async Task<ActionResult> Patch(int id)
         {
-            var result = _peopleService.UpdateWithDeleteFlag(id);
-
+            var result = await _peopleService.UpdateWithDeleteFlag(id);
             if (result)
             {
                 return NoContent();
-            }
-
-            return NotFound();
+            }            return NotFound();
         }
 
         // Delete: PersonController/Delete/5
@@ -148,15 +146,14 @@ namespace FlexateWebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var result = _peopleService.DeletePerson(id);
-
+            var result = await _peopleService.DeletePerson(id);
             if (result)
             {
                 return NoContent();
             }
-            return NotFound();            
+            return NotFound();
         }
     }
 }
