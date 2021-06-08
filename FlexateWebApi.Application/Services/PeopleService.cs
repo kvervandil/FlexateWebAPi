@@ -57,28 +57,46 @@ namespace FlexateWebApi.Application.Services
             return await Task.FromResult(model);
         }
 
-        public async Task<Person> GetPersonById(int id)
+        public async Task<SinglePersonDto> GetPersonById(int id)
         {
             var person = People.FirstOrDefault(e => e.Id == id);
 
-            return await Task.FromResult(person);
+            if (person == null || person.IsDeleted == true)
+            {
+                return null;
+            }
+
+            var personDto = new SinglePersonDto()
+            {
+                Name = person.Name,
+                Address = person.Address,
+                Age = person.Age
+            };
+
+            return await Task.FromResult(personDto);
         }
 
-        public async Task<Person> AddNewPerson(CreatePersonDto personDto)
+        public async Task<int?> AddNewPerson(CreatePersonDto personDto)
         {
             Person person = new Person()
             {
                 Name = personDto.Name,
+                Age = personDto.Age,
+                Address = personDto.Address,
                 IsDeleted = false,
                 Id = GetLastPersonId() + 1
             };
 
-            if (person != null)
+            if (string.IsNullOrEmpty(person.Name)
+                || string.IsNullOrEmpty(person.Address)
+                || person.Age < 0)
             {
-                People.Add(person);
+                return null;
             }
 
-            return await Task.FromResult(person);
+            People.Add(person);
+
+            return await Task.FromResult(person.Id);
         }
 
         private int GetLastPersonId()

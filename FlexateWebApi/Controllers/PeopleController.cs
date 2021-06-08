@@ -64,7 +64,7 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Person>> Get(int id)
+        public async Task<ActionResult<SinglePersonDto>> Get(int id)
         {
             var person = await _peopleService.GetPersonById(id);
 
@@ -87,14 +87,14 @@ namespace FlexateWebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Create([FromBody]CreatePersonDto personDto)
         {
-            var person = await _peopleService.AddNewPerson(personDto);
+            var id = await _peopleService.AddNewPerson(personDto);
 
-            if (person == null)
+            if (id == null)
             {
                 return BadRequest();
             }
 
-            return Created($"api/person/{person.Id}", person.Id);
+            return Created($"api/person/{id}", id);
         }
 
         // Put: PersonController/Edit/5
