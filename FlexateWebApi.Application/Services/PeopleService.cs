@@ -4,7 +4,7 @@ using FlexateWebApi.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FlexateWebApi.Application.Services
@@ -18,7 +18,8 @@ namespace FlexateWebApi.Application.Services
             People = Entity.InitializePeople();
         }
 
-        public async Task<PeopleForListDto> GetPeople(int pageSize, int pageNo, string searchString)
+        public async Task<PeopleForListDto> GetPeople(int pageSize, int pageNo, string searchString,
+                                                      CancellationToken cancellationToken)
         {
             var people = People.Where(p => p.Name.StartsWith(searchString));
 
@@ -54,6 +55,7 @@ namespace FlexateWebApi.Application.Services
                 NoOfPage = noOfPages
             };
 
+            //cancellation token to be added when method async
             return await Task.FromResult(model);
         }
 

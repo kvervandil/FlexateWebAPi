@@ -4,6 +4,7 @@ using FlexateWebApi.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace FlexateWebApi.Controllers
     public class PeopleController : ControllerBase
     {
         private readonly IPeopleService _peopleService;
-        public readonly ILogger<PeopleController> _logger;
+        public readonly ILogger<PeopleController> _logger;       
 
         /// <summary>
         /// 
@@ -27,8 +28,6 @@ namespace FlexateWebApi.Controllers
         {
             _peopleService = personService;
             _logger = logger;
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken token = source.Token;
         }
 
         /// <summary>
@@ -39,11 +38,11 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PeopleForListDto>> Get(string searchString = "", int pageSize = 10, int pageNo = 1)
+        public async Task<ActionResult<PeopleForListDto>> Get(string searchString = "", int pageSize = 10, int pageNo = 1, CancellationToken cancellationToken)
         {
             _logger.LogInformation("we are in Index action");
 
-            var model = await _peopleService.GetPeople(pageSize, pageNo, searchString);
+            var model = await _peopleService.GetPeople(pageSize, pageNo, searchString, cancellationToken);
 
             if (model.Count == 0)
             {
@@ -134,7 +133,8 @@ namespace FlexateWebApi.Controllers
             if (result)
             {
                 return NoContent();
-            }            return NotFound();
+            }
+            return NotFound();
         }
 
         // Delete: PersonController/Delete/5
