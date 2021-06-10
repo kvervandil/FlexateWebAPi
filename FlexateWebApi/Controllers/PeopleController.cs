@@ -38,7 +38,7 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PeopleForListDto>> Get(string searchString = "", int pageSize = 10, int pageNo = 1, CancellationToken cancellationToken)
+        public async Task<ActionResult<PeopleForListDto>> Get(CancellationToken cancellationToken, string searchString = "", int pageSize = 10, int pageNo = 1)
         {
             _logger.LogInformation("we are in Index action");
 

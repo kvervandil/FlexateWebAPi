@@ -1,6 +1,7 @@
 ﻿using FlexateWebApi.Application.Dto;
 using FlexateWebApi.Application.Interfaces;
-using FlexateWebApi.Domain;
+using FlexateWebApi.Domain.Interfaces;
+using FlexateWebApi.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +12,18 @@ namespace FlexateWebApi.Application.Services
 {
     public class PeopleService : IPeopleService
     {
-        public IList<Person> People { get; set; }
+        private readonly IPeopleRepository _peopleRepository;
 
-        public PeopleService()
+        public PeopleService(IPeopleRepository peopleRepository)
         {
-            People = Entity.InitializePeople();
+            _peopleRepository = peopleRepository;
         }
 
         public async Task<PeopleForListDto> GetPeople(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken)
         {
-            var people = People.Where(p => p.Name.StartsWith(searchString));
+            var people = await _peopleRepository.GetPeople(pageSize, pageNo, searchString, cancellationToken);
+            var noOfAllPeople = await _peopleRepository.GetNoOfPeople(cancellationToken);
 
             List<PersonForListDto> ListForPeople = new List<PersonForListDto>();
 
@@ -30,38 +32,22 @@ namespace FlexateWebApi.Application.Services
                 ListForPeople.Add(new PersonForListDto() { Id = person.Id, Name = person.Name });
             }
 
-            var prevPage = 1;
-            if (pageNo > 1)
-            {
-                prevPage = pageNo - 1;
-            }
-
-            var nextPage = pageNo + 1;
-
-            var temp1 = (double)People.Count / pageSize;
-            var noOfPages = (int)Math.Round((double)People.Count / pageSize);
-
-            var peopleToShow = ListForPeople.Skip(pageSize * (pageNo - 1)).Take(pageSize).ToList();
-
             var model = new PeopleForListDto()
             {
-                PeopleList = peopleToShow,
+                PeopleList = ListForPeople,
                 CurrentPage = pageNo,
                 PageSize = pageSize,
                 SearchString = searchString,
-                Count = People.Count,
-                PrevPage = prevPage,
-                NextPage = nextPage,
-                NoOfPage = noOfPages
+                Count = noOfAllPeople
             };
 
-            //cancellation token to be added when method async
-            return await Task.FromResult(model);
+            return model;
         }
 
-        public async Task<SinglePersonDto> GetPersonById(int id)
+        public async Task<SinglePersonDto> GetPersonById(int id, CancellationToken cancellationToken)
         {
-            var person = People.FirstOrDefault(e => e.Id == id);
+
+            var person = await _peopleRepository.GetPersonById(id, cancellationToken);
 
             if (person == null || person.IsDeleted == true)
             {
@@ -75,18 +61,17 @@ namespace FlexateWebApi.Application.Services
                 Age = person.Age
             };
 
-            return await Task.FromResult(personDto);
+            return personDto;
         }
 
-        public async Task<int?> AddNewPerson(CreatePersonDto personDto)
+        public async Task<int?> AddNewPerson(CreatePersonDto personDto, CancellationToken cancellationToken)
         {
             Person person = new Person()
             {
                 Name = personDto.Name,
                 Age = personDto.Age,
                 Address = personDto.Address,
-                IsDeleted = false,
-                Id = GetLastPersonId() + 1
+                IsDeleted = false
             };
 
             if (string.IsNullOrEmpty(person.Name)
@@ -96,46 +81,40 @@ namespace FlexateWebApi.Application.Services
                 return null;
             }
 
-            People.Add(person);
+            int id = await _peopleRepository.AddPerson(person, cancellationToken);
 
-            return await Task.FromResult(person.Id);
+            return person.Id;
         }
 
-        private int GetLastPersonId()
+        public async Task<bool> UpdatePerson(UpdatePersonDto personDto,
+                                             CancellationToken cancellationToken)
         {
-            int lastId = People.LastOrDefault().Id;
-
-            return lastId;
-        }
-
-        public async Task<bool> UpdatePerson(int personToUpdateId, UpdatePersonDto personDto)
-        {
-            var personToUpdate = People.FirstOrDefault(p => p.Id == personToUpdateId);
-
-            if (personToUpdate == null)
+            if (personDto == null)
             {
                 return false;
             }
 
-            personToUpdate.Name = personDto.Name;
-            personToUpdate.Address = personDto.Address;
-            personToUpdate.Age = personDto.Age;
+            var person = new Person()
+            {
+                Id = personDto.Id,
+                Name = personDto.Name,
+                Age = personDto.Age,
+                Address = personDto.Address
+            };
 
-            return await Task.FromResult(true);
+            return await _peopleRepository.UpdatePerson(person, cancellationToken);
         }
 
-        public async Task<bool> DeletePerson(int id)
+        public async Task<bool> DeletePerson(int id, CancellationToken cancellationToken)
         {
-            var person = People.FirstOrDefault(person => person.Id == id);
-
-            if (person == null)
+            try
+            {
+                return await _peopleRepository.DeletePerson(id, cancellationToken);
+            }
+            catch (Exception)
             {
                 return false;
-            }
-            
-            People.Remove(person);
-
-            return await Task.FromResult(true);
+            }            
         }
 
         public async Task<bool> UpdateWithDeleteFlag(int id)

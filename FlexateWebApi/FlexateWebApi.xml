@@ -16,7 +16,7 @@
             <param name="personService"></param>
             <param name="logger"></param>
         </member>
-        <member name="M:FlexateWebApi.Controllers.PeopleController.Get(System.String,System.Int32,System.Int32)">
+        <member name="M:FlexateWebApi.Controllers.PeopleController.Get(System.Threading.CancellationToken,System.String,System.Int32,System.Int32)">
             <summary>
             Get all people
             </summary>

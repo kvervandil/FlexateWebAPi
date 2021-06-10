@@ -1,5 +1,4 @@
-﻿using FlexateWebApi.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,8 +11,22 @@ namespace FlexateWebApi.Application.Dto
         public int PageSize { get; set; }
         public string SearchString { get; set; }
         public int Count { get; set; }
-        public int PrevPage { get; set; }
-        public int NextPage { get; set; }
-        public int NoOfPage { get; set; }
+        public int PrevPage {
+            get
+            {
+                if (CurrentPage > 1)
+                {
+                    return CurrentPage--;
+                }
+                return 1;
+            } 
+        }
+        public int NextPage { 
+            get
+            {
+                return NoOfPage > CurrentPage ? CurrentPage++ : NoOfPage;
+            }
+        }
+        public int NoOfPage => (int)Math.Round((double)Count / PageSize);
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FlexateWebApi.Domain
+namespace FlexateWebApi.Domain.Model
 {
     public class Person
     {
@@ -11,5 +11,7 @@ namespace FlexateWebApi.Domain
         public string Address { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
+        public virtual ICollection<Car> Cars { get; set; }
+        public virtual ICollection<Office> Offices { get; set; }
     }
 }
