@@ -36,7 +36,7 @@ namespace FlexateWebApi
                 builder.AllowAnyOrigin().AllowAnyMethod();
             }));
 
-            services.AddInfrastructure(Configuration);
+            services.AddInfrastructure();
             services.AddApplication();
             services.AddControllers();
             services.AddSwaggerGen(c =>

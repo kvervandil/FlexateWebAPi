@@ -46,7 +46,6 @@ namespace FlexateWebApi.Application.Services
 
         public async Task<SinglePersonDto> GetPersonById(int id, CancellationToken cancellationToken)
         {
-
             var person = await _peopleRepository.GetPersonById(id, cancellationToken);
 
             if (person == null || person.IsDeleted == true)
@@ -117,18 +116,17 @@ namespace FlexateWebApi.Application.Services
             }            
         }
 
-        public async Task<bool> UpdateWithDeleteFlag(int id)
+        public async Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken)
         {
-            var person = People.FirstOrDefault(person => person.Id == id);
-
-            if (person == null)
+            try
             {
+                return await _peopleRepository.UpdateWithDeletionFlag(id, cancellationToken);
+            }
+            catch (Exception)
+            {
+
                 return false;
             }
-
-            person.IsDeleted = !person.IsDeleted;
-
-            return await Task.FromResult(true);
         }
     }
 }

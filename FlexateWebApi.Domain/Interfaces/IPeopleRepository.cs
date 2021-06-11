@@ -16,5 +16,6 @@ namespace FlexateWebApi.Domain.Interfaces
         Task<int> AddPerson(Person person, CancellationToken cancellationToken);
         Task<bool> UpdatePerson(Person person, CancellationToken cancellationToken);
         Task<bool> DeletePerson(int id, CancellationToken cancellationToken);
+        Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken);
     }
 }

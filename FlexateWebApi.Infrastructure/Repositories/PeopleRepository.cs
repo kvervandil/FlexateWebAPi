@@ -29,7 +29,7 @@ namespace FlexateWebApi.Infrastructure.Repositories
 
         public async Task<Person> GetPersonById(int id, CancellationToken cancellationToken)
         {
-            return await _context.People.FindAsync(id, cancellationToken);
+            return await _context.People.FindAsync(new object[] { id }, cancellationToken);
         }
 
         public async Task<int> GetNoOfPeople(CancellationToken cancellationToken)
@@ -77,6 +77,25 @@ namespace FlexateWebApi.Infrastructure.Repositories
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var person = GetPersonById(id, cancellationToken);
+
+                _context.Attach(person);
+                _context.Entry(person).Property("IsDeleted").IsModified = true;
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
         }
     }
 }

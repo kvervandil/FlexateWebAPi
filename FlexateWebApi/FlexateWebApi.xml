@@ -20,43 +20,49 @@
             <summary>
             Get all people
             </summary>
+            <param name="searchString"></param>
+            <param name="pageSize"></param>
+            <param name="pageNo"></param>
+            <param name="cancellationToken"></param>
             <returns></returns>
-            
         </member>
-        <member name="M:FlexateWebApi.Controllers.PeopleController.Get(System.Int32)">
+        <member name="M:FlexateWebApi.Controllers.PeopleController.Get(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Get person by id
             </summary>
             <param name="id"></param>
-            
+            <param name="cancellationToken"></param>
             <returns></returns>
         </member>
-        <member name="M:FlexateWebApi.Controllers.PeopleController.Create(FlexateWebApi.Application.Dto.CreatePersonDto)">
+        <member name="M:FlexateWebApi.Controllers.PeopleController.Create(FlexateWebApi.Application.Dto.CreatePersonDto,System.Threading.CancellationToken)">
             <summary>
             Create new person
             </summary>
             <param name="personDto"></param>
+            <param name="cancellationToken"></param>
             <returns></returns>
         </member>
-        <member name="M:FlexateWebApi.Controllers.PeopleController.Put(System.Int32,FlexateWebApi.Application.Dto.UpdatePersonDto)">
+        <member name="M:FlexateWebApi.Controllers.PeopleController.Put(FlexateWebApi.Application.Dto.UpdatePersonDto,System.Threading.CancellationToken)">
             <summary>
             Update existing person
             </summary>
-            <param name="id"></param>
             <param name="personDto"></param>
+            <param name="cancellationToken"></param>
             <returns></returns>
         </member>
-        <member name="M:FlexateWebApi.Controllers.PeopleController.Patch(System.Int32)">
+        <member name="M:FlexateWebApi.Controllers.PeopleController.Patch(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Update one property in person entity
             </summary>
             <param name="id"></param>
+            <param name="cancellationToken"></param>
         </member>
-        <member name="M:FlexateWebApi.Controllers.PeopleController.Delete(System.Int32)">
+        <member name="M:FlexateWebApi.Controllers.PeopleController.Delete(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Delete existing person
             </summary>
             <param name="id"></param>
+            <param name="cancellationToken"></param>
         </member>
     </members>
 </doc>
