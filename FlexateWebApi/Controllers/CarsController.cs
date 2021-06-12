@@ -24,7 +24,7 @@ namespace FlexateWebApi.Controllers
         public async Task<ActionResult<CarsForListDto>> Get(CancellationToken cancellationToken, string searchString = "", int pageSize = 10,
                                                               int pageNo = 1)
         {
-
+            return BadRequest();
         }
     }
 }
