@@ -20,7 +20,7 @@ namespace FlexateWebApi.Infrastructure.Repositories
 
         public async Task<List<Person>> GetPeople(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken)
         {
-            var people = _context.People.AsQueryable();
+            var people = _context.Cars.AsQueryable();
 
             var peopleFiltered = people.Where(p => p.Name.StartsWith(searchString));
             
@@ -29,17 +29,17 @@ namespace FlexateWebApi.Infrastructure.Repositories
 
         public async Task<Person> GetPersonById(int id, CancellationToken cancellationToken)
         {
-            return await _context.People.FindAsync(new object[] { id }, cancellationToken);
+            return await _context.Cars.FindAsync(new object[] { id }, cancellationToken);
         }
 
         public async Task<int> GetNoOfPeople(CancellationToken cancellationToken)
         {
-            return await _context.People.CountAsync(cancellationToken);
+            return await _context.Cars.CountAsync(cancellationToken);
         }
 
         public async Task<int> AddPerson(Person person, CancellationToken cancellationToken)
         {
-            await _context.People.AddAsync(person, cancellationToken);
+            await _context.Cars.AddAsync(person, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
             return person.Id;

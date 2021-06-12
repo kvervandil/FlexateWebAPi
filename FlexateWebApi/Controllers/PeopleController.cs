@@ -64,8 +64,7 @@ namespace FlexateWebApi.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         // GET: PersonController/5
-        [Route("{id}")]
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<SinglePersonDto>> Get(int id, CancellationToken cancellationToken)
@@ -109,13 +108,12 @@ namespace FlexateWebApi.Controllers
         /// <param name="personDto"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("{id}")]
-        public async Task<ActionResult> Put([FromBody]UpdatePersonDto personDto, CancellationToken cancellationToken)
+        public async Task<ActionResult> Put(int id, [FromBody]UpdatePersonDto personDto, CancellationToken cancellationToken)
         {
-            var result = await _peopleService.UpdatePerson(personDto, cancellationToken);
+            var result = await _peopleService.UpdatePerson(id, personDto, cancellationToken);
 
             if (result)
             {
@@ -130,10 +128,9 @@ namespace FlexateWebApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
-        [HttpPatch]
+        [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("{id}")]
         public async Task<ActionResult> Patch(int id, CancellationToken cancellationToken)
         {
             var result = await _peopleService.UpdateWithDeletionFlag(id, cancellationToken);
@@ -150,10 +147,9 @@ namespace FlexateWebApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("{id}")]
         public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             var result = await _peopleService.DeletePerson(id, cancellationToken);

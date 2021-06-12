@@ -85,7 +85,7 @@ namespace FlexateWebApi.Application.Services
             return person.Id;
         }
 
-        public async Task<bool> UpdatePerson(UpdatePersonDto personDto,
+        public async Task<bool> UpdatePerson(int id, UpdatePersonDto personDto,
                                              CancellationToken cancellationToken)
         {
             if (personDto == null)
@@ -93,14 +93,15 @@ namespace FlexateWebApi.Application.Services
                 return false;
             }
 
-            var person = new Person()
+            Person person = new Person()
             {
-                Id = personDto.Id,
-                Name = personDto.Name,
+                Id = id,
+                Address = personDto.Address,
                 Age = personDto.Age,
-                Address = personDto.Address
+                Name = personDto.Name
             };
 
+            
             return await _peopleRepository.UpdatePerson(person, cancellationToken);
         }
 
