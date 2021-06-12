@@ -1,4 +1,4 @@
-﻿using FlexateWebApi.Application.Dto;
+﻿using FlexateWebApi.Application.Dto.People;
 using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain.Interfaces;
 using FlexateWebApi.Domain.Model;

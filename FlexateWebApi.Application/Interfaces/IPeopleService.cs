@@ -1,5 +1,4 @@
-﻿using FlexateWebApi.Application.Dto;
-using FlexateWebApi.Domain;
+﻿using FlexateWebApi.Application.Dto.People;
 using System;
 using System.Collections.Generic;
 using System.Text;

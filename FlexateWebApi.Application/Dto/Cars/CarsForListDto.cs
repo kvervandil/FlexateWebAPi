@@ -1,10 +1,12 @@
-﻿using System;
+﻿using FlexateWebApi.Application.Mapping;
+using FlexateWebApi.Domain.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FlexateWebApi.Application.Dto
+namespace FlexateWebApi.Application.Dto.Cars
 {
-    public class CarsForListDto
+    public class CarsForListDto : IMapFrom<Car>
     {
         public List<CarForListDto> PeopleList { get; set; }
         public int CurrentPage { get; set; }

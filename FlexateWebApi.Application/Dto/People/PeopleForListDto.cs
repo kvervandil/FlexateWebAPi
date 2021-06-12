@@ -1,11 +1,14 @@
-﻿using FlexateWebApi.Domain;
+﻿using AutoMapper;
+using FlexateWebApi.Application.Mapping;
+using FlexateWebApi.Domain;
+using FlexateWebApi.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FlexateWebApi.Application.Dto
+namespace FlexateWebApi.Application.Dto.People
 {
-    public class PeopleForListDto
+    public class PeopleForListDto : IMapFrom<Person>
     {
         public List<PersonForListDto> PeopleList { get; set; }
         public int CurrentPage { get; set; }
@@ -19,5 +22,10 @@ namespace FlexateWebApi.Application.Dto
             { return NoOfPages == CurrentPage; }
         }
         public int NoOfPages => (int)Math.Ceiling((double)Count / PageSize);
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<Person, PeopleForListDto>();
+        }
     }
 }

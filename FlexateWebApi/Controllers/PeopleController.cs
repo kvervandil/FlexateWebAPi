@@ -1,6 +1,5 @@
-﻿using FlexateWebApi.Application.Dto;
+﻿using FlexateWebApi.Application.Dto.People;
 using FlexateWebApi.Application.Interfaces;
-using FlexateWebApi.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
