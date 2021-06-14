@@ -30,7 +30,7 @@ namespace FlexateWebApi.Controllers
         }
 
         /// <summary>
-        /// Get all people
+        /// Get filtered people
         /// </summary>
         /// <param name="searchString"></param>
         /// <param name="pageSize"></param>
@@ -62,7 +62,6 @@ namespace FlexateWebApi.Controllers
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        // GET: PersonController/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -84,7 +83,6 @@ namespace FlexateWebApi.Controllers
         /// <param name="personDto"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        // POST: PersonController/Create
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -100,10 +98,10 @@ namespace FlexateWebApi.Controllers
             return Created($"api/person/{id}", id);
         }
 
-        // Put: PersonController/Edit/5
         /// <summary>
         /// Update existing person
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="personDto"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>

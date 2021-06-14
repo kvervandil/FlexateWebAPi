@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FlexateWebApi.Domain\FlexateWebApi.Domain.csproj" />
+    <ProjectReference Include="..\FlexateWebApi.Domain\FlexateWebApi.Entity.csproj" />
   </ItemGroup>
 
 </Project>

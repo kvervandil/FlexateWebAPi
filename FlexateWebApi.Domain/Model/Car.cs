@@ -11,5 +11,6 @@ namespace FlexateWebApi.Domain.Model
         public string Model { get; set; }
         public int PersonId { get; set; }
         public virtual Person Person { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

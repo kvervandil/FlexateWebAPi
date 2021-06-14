@@ -6,10 +6,9 @@ using System.Text;
 
 namespace FlexateWebApi.Application.Dto.Cars
 {
-    public class CreateCarDto : IMapFrom<Car>
+    public class UpdateCarDto : IMapFrom<Car>
     {
         public string Model { get; set; }
         public string Brand { get; set; }
-        public int PersonId { get; set; }
     }
 }

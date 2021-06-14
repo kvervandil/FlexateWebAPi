@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FlexateWebApi.Application\FlexateWebApi.Application.csproj" />
-    <ProjectReference Include="..\FlexateWebApi.Domain\FlexateWebApi.Domain.csproj" />
     <ProjectReference Include="..\FlexateWebApi.Infrastructure\FlexateWebApi.Infrastructure.csproj" />
   </ItemGroup>
 

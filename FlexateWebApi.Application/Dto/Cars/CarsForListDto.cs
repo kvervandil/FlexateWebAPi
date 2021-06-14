@@ -1,4 +1,6 @@
-﻿using FlexateWebApi.Application.Mapping;
+﻿using AutoMapper;
+using FlexateWebApi.Application.Dto.People;
+using FlexateWebApi.Application.Mapping;
 using FlexateWebApi.Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ namespace FlexateWebApi.Application.Dto.Cars
 {
     public class CarsForListDto : IMapFrom<Car>
     {
-        public List<CarForListDto> PeopleList { get; set; }
+        public List<CarForListDto> CarsList { get; set; }
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }
         public string SearchString { get; set; }
@@ -28,5 +30,10 @@ namespace FlexateWebApi.Application.Dto.Cars
             }
         }
         public int NoOfPages => (int)Math.Ceiling((double)Count / PageSize);
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<Person, PeopleForListDto>();
+        }
     }
 }

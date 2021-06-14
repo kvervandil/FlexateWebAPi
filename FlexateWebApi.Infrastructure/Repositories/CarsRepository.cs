@@ -80,7 +80,7 @@ namespace FlexateWebApi.Infrastructure.Repositories
             }
         }
 
-        public async Task<bool> UpdateWithCancellationFlag(int id, CancellationToken cancellationToken)
+        public async Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken)
         {
             try
             {

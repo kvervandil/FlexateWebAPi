@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{CFE363C7-1308-4A99-95FF-DCE548C84BEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexateWebApi.Infrastructure", "FlexateWebApi.Infrastructure\FlexateWebApi.Infrastructure.csproj", "{B7D84022-A681-4EBC-A801-525F077F3CC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlexateWebApi.Infrastructure", "FlexateWebApi.Infrastructure\FlexateWebApi.Infrastructure.csproj", "{B7D84022-A681-4EBC-A801-525F077F3CC3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{462DF82E-D37A-40B0-9C6A-D2950B3F6905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexateWebApi.Domain", "FlexateWebApi.Domain\FlexateWebApi.Domain.csproj", "{14E7336D-759E-4D09-97AE-9A38D36E158D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlexateWebApi.Entity", "FlexateWebApi.Domain\FlexateWebApi.Entity.csproj", "{14E7336D-759E-4D09-97AE-9A38D36E158D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlexateWebApi.Application", "FlexateWebApi.Application\FlexateWebApi.Application.csproj", "{F134922F-239B-4F17-8B0E-A1978D63570A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlexateWebApi.Application", "FlexateWebApi.Application\FlexateWebApi.Application.csproj", "{F134922F-239B-4F17-8B0E-A1978D63570A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,7 +46,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{93908A23-9F99-4691-A8BF-25937F9C013A} = {BEF04ECD-E7C5-4157-809C-07AD24AD86B7}
 		{B7D84022-A681-4EBC-A801-525F077F3CC3} = {CFE363C7-1308-4A99-95FF-DCE548C84BEB}
-		{14E7336D-759E-4D09-97AE-9A38D36E158D} = {462DF82E-D37A-40B0-9C6A-D2950B3F6905}
+		{14E7336D-759E-4D09-97AE-9A38D36E158D} = {CFE363C7-1308-4A99-95FF-DCE548C84BEB}
 		{F134922F-239B-4F17-8B0E-A1978D63570A} = {462DF82E-D37A-40B0-9C6A-D2950B3F6905}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

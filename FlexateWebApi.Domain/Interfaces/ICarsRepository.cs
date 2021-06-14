@@ -1,6 +1,7 @@
 ﻿using FlexateWebApi.Domain.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +16,6 @@ namespace FlexateWebApi.Domain.Interfaces
         Task<int> AddCar(Car car, CancellationToken cancellationToken);
         Task<bool> UpdateCar(Car car, CancellationToken cancellationToken);
         Task<bool> DeleteCar(int id, CancellationToken cancellationToken);
-        Task<bool> UpdateWithCancellationFlag(int id, CancellationToken cancellationToken);
+        Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken);
     }
 }

@@ -13,6 +13,7 @@ namespace FlexateWebApi.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddTransient<IPeopleRepository, PeopleRepository>();
+            services.AddTransient<ICarsRepository, CarsRepository>();
 
             return services;
         }

@@ -34,7 +34,7 @@ namespace FlexateWebApi.Infrastructure.Repositories
 
         public async Task<int> GetNoOfPeople(CancellationToken cancellationToken)
         {
-            return await _context.Cars.CountAsync(cancellationToken);
+            return await _context.People.CountAsync(cancellationToken);
         }
 
         public async Task<int> AddPerson(Person person, CancellationToken cancellationToken)

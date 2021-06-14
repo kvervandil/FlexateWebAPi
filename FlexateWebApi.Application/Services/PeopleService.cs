@@ -1,4 +1,5 @@
-﻿using FlexateWebApi.Application.Dto.People;
+﻿using AutoMapper;
+using FlexateWebApi.Application.Dto.People;
 using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain.Interfaces;
 using FlexateWebApi.Domain.Model;
@@ -13,10 +14,12 @@ namespace FlexateWebApi.Application.Services
     public class PeopleService : IPeopleService
     {
         private readonly IPeopleRepository _peopleRepository;
+        private readonly IMapper _mapper;
 
-        public PeopleService(IPeopleRepository peopleRepository)
+        public PeopleService(IPeopleRepository peopleRepository, IMapper mapper)
         {
             _peopleRepository = peopleRepository;
+            _mapper = mapper;
         }
 
         public async Task<PeopleForListDto> GetPeople(int pageSize, int pageNo, string searchString,
@@ -25,16 +28,11 @@ namespace FlexateWebApi.Application.Services
             var people = await _peopleRepository.GetPeople(pageSize, pageNo, searchString, cancellationToken);
             var noOfAllPeople = await _peopleRepository.GetNoOfPeople(cancellationToken);
 
-            List<PersonForListDto> ListForPeople = new List<PersonForListDto>();
-
-            foreach (var person in people)
-            {
-                ListForPeople.Add(new PersonForListDto() { Id = person.Id, Name = person.Name });
-            }
+            List<PersonForListDto> peopleForListDto = _mapper.Map<List<PersonForListDto>>(people);
 
             var model = new PeopleForListDto()
             {
-                PeopleList = ListForPeople,
+                PeopleList = peopleForListDto,
                 CurrentPage = pageNo,
                 PageSize = pageSize,
                 SearchString = searchString,
@@ -53,12 +51,7 @@ namespace FlexateWebApi.Application.Services
                 return null;
             }
 
-            var personDto = new SinglePersonDto()
-            {
-                Name = person.Name,
-                Address = person.Address,
-                Age = person.Age
-            };
+            var personDto = _mapper.Map<SinglePersonDto>(person);
 
             return personDto;
         }
@@ -82,7 +75,7 @@ namespace FlexateWebApi.Application.Services
 
             int id = await _peopleRepository.AddPerson(person, cancellationToken);
 
-            return person.Id;
+            return id;
         }
 
         public async Task<bool> UpdatePerson(int id, UpdatePersonDto personDto,
