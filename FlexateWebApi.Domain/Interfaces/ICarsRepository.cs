@@ -11,6 +11,7 @@ namespace FlexateWebApi.Infrastructure.Entity.Interfaces
     public interface ICarsRepository
     {
         Task<List<Car>> GetCars(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken);
+        Task<List<Car>> GetAllCars(CancellationToken cancellationToken);
         Task<Car> GetCarById(int id, CancellationToken cancellationToken);
         Task<int> GetNoOfCars(CancellationToken cancellationToken);
         Task<int> AddCar(Car car, CancellationToken cancellationToken);

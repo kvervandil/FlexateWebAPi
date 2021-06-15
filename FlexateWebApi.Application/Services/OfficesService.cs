@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FlexateWebApi.Application.Dto;
 using FlexateWebApi.Application.Dto.Offices;
 using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain.Model;
@@ -22,7 +23,7 @@ namespace FlexateWebApi.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<OfficesForListDto> GetOffices(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken)
+        public async Task<GenericForListDto<OfficeForListDto>> GetOffices(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken)
         {
             var offices = await _officesRepository.GetOffices(pageSize, pageNo, searchString, cancellationToken);
 
@@ -30,9 +31,9 @@ namespace FlexateWebApi.Application.Services
 
             List<OfficeForListDto> officesDto = _mapper.Map<List<OfficeForListDto>>(offices);
 
-            var officesForListDto = new OfficesForListDto()
+            var officesForListDto = new GenericForListDto<OfficeForListDto>()
             {
-                OfficesList = officesDto,
+                Items = officesDto,
                 CurrentPage = pageNo,
                 Count = noOfOffices,
                 PageSize = pageSize
@@ -115,6 +116,21 @@ namespace FlexateWebApi.Application.Services
             {
                 return false;
             }
+        }
+
+        public async Task<OfficesForListDto> GetAllOffices(CancellationToken cancellationToken)
+        {
+            var offices = await _officesRepository.GetAllOffices(cancellationToken);
+
+
+            List<OfficeForListDto> officesDto = _mapper.Map<List<OfficeForListDto>>(offices);
+
+            var officesForListDto = new OfficesForListDto()
+            {
+                OfficesList = officesDto,
+            };
+
+            return officesForListDto;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FlexateWebApi.Application.Dto.Offices;
+﻿using FlexateWebApi.Application.Dto;
+using FlexateWebApi.Application.Dto.Offices;
 using FlexateWebApi.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace FlexateWebApi.Controllers
 
         public ILogger _logger { get; }
 
-        public OfficesController(IOfficesService officesService, ILogger logger)
+        public OfficesController(IOfficesService officesService, ILogger<OfficesController> logger)
         {
             _officesService = officesService;
             _logger = logger;
@@ -36,7 +37,7 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OfficesForListDto>> Get(CancellationToken cancellationToken,
+        public async Task<ActionResult<GenericForListDto<OfficeForListDto>>> Get(CancellationToken cancellationToken,
                                                               string searchString = "", int pageSize = 10,
                                                               int pageNo = 1)
         {

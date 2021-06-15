@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FlexateWebApi.Application.Dto;
 using FlexateWebApi.Application.Dto.People;
 using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain.Model;
@@ -22,7 +23,7 @@ namespace FlexateWebApi.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<PeopleForListDto> GetPeople(int pageSize, int pageNo, string searchString,
+        public async Task<GenericForListDto<PersonForListDto>> GetPeople(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken)
         {
             var people = await _peopleRepository.GetPeople(pageSize, pageNo, searchString, cancellationToken);
@@ -30,14 +31,22 @@ namespace FlexateWebApi.Application.Services
 
             List<PersonForListDto> peopleForListDto = _mapper.Map<List<PersonForListDto>>(people);
 
-            var model = new PeopleForListDto()
+            var model = new GenericForListDto<PersonForListDto>() { 
+                Items = peopleForListDto,
+                CurrentPage = pageNo,
+                PageSize = pageSize,
+                SearchString = searchString,
+                Count = noOfAllPeople
+            };
+
+            /*var model = new PeopleForListDto()
             {
                 PeopleList = peopleForListDto,
                 CurrentPage = pageNo,
                 PageSize = pageSize,
                 SearchString = searchString,
                 Count = noOfAllPeople
-            };
+            };*/
 
             return model;
         }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace FlexateWebApi.Application.Dto.Offices
 {
-    public class OfficesForListDto : IMapFrom<Office>
+    public class OfficesForListDto
     {
         public List<OfficeForListDto> OfficesList { get; set; }
         public int CurrentPage { get; set; }
@@ -29,10 +29,5 @@ namespace FlexateWebApi.Application.Dto.Offices
             }
         }
         public int NoOfPages => (int)Math.Ceiling((double)Count / PageSize);
-
-        public void Mapping(Profile profile)
-        {
-            profile.CreateMap<Office, OfficesForListDto>();
-        }
     }
 }

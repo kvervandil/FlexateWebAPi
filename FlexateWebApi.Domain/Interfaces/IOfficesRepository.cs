@@ -10,6 +10,7 @@ namespace FlexateWebApi.Infrastructure.Entity.Interfaces
     public interface IOfficesRepository
     {
         Task<List<Office>> GetOffices(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken);
+        Task<List<Office>> GetAllOffices(CancellationToken cancellationToken);
         Task<Car> GetOfficeById(int id, CancellationToken cancellationToken);
         Task<int> GetNoOfOffices(CancellationToken cancellationToken);
         Task<int> AddOffice(Office office, CancellationToken cancellationToken);

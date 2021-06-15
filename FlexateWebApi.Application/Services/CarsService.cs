@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FlexateWebApi.Application.Dto;
 using FlexateWebApi.Application.Dto.Cars;
 using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain.Model;
@@ -23,7 +24,7 @@ namespace FlexateWebApi.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<CarsForListDto> GetCars(int pageSize, int pageNo, string searchString,
+        public async Task<GenericForListDto<CarForListDto>> GetCars(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken)
         {
             var cars = await _carsRepository.GetCars(pageSize, pageNo, searchString, cancellationToken);
@@ -32,9 +33,9 @@ namespace FlexateWebApi.Application.Services
 
             List<CarForListDto> carsDto = _mapper.Map<List<CarForListDto>>(cars);
 
-            var carsForList = new CarsForListDto()
+            var carsForList = new GenericForListDto<CarForListDto>()
             {
-                CarsList = carsDto,
+                Items = carsDto,
                 CurrentPage = pageNo,
                 Count = noOfCars,
                 PageSize = pageSize
@@ -118,6 +119,20 @@ namespace FlexateWebApi.Application.Services
             {
                 return false;
             }
+        }
+
+        public async Task<CarsForListDto> GetAllCars(CancellationToken cancellationToken)
+        {
+            var cars = await _carsRepository.GetAllCars(cancellationToken);
+
+            List<CarForListDto> carsDto = _mapper.Map<List<CarForListDto>>(cars);
+
+            var carsForList = new CarsForListDto()
+            {
+                CarsList = carsDto,
+            };
+
+            return carsForList;
         }
     }
 }

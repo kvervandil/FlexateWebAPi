@@ -18,6 +18,12 @@ namespace FlexateWebApi.Infrastructure.Repositories
         {
             _context = context;
         }
+
+        public async Task<List<Car>> GetAllCars(CancellationToken cancellationToken)
+        {
+            return await _context.Cars.ToListAsync(cancellationToken);
+        }
+
         public async Task<int> AddCar(Car car, CancellationToken cancellationToken)
         {
             await _context.Cars.AddAsync(car, cancellationToken);

@@ -1,4 +1,5 @@
-﻿using FlexateWebApi.Application.Dto.People;
+﻿using FlexateWebApi.Application.Dto;
+using FlexateWebApi.Application.Dto.People;
 using FlexateWebApi.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace FlexateWebApi.Controllers
-{    
+{
     /// <summary>
     /// crud operations on Person
     /// </summary>
@@ -16,16 +17,21 @@ namespace FlexateWebApi.Controllers
     public class PeopleController : ControllerBase
     {
         private readonly IPeopleService _peopleService;
-        public readonly ILogger<PeopleController> _logger;       
+        private readonly ICarsService _carsService;
+        private readonly IOfficesService _officesService;
+        public readonly ILogger<PeopleController> _logger;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="personService"></param>
         /// <param name="logger"></param>
-        public PeopleController(IPeopleService personService, ILogger<PeopleController> logger)
+        public PeopleController(IPeopleService personService, ILogger<PeopleController> logger, ICarsService carsService,
+                                IOfficesService officesService)
         {
             _peopleService = personService;
+            _carsService = carsService;
+            _officesService = officesService;
             _logger = logger;
         }
 
@@ -40,7 +46,7 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PeopleForListDto>> Get(CancellationToken cancellationToken,
+        public async Task<ActionResult<GenericForListDto<PersonForListDto>>> Get(CancellationToken cancellationToken,
                                                               string searchString = "", int pageSize = 10,
                                                               int pageNo = 1)
         {
@@ -86,7 +92,7 @@ namespace FlexateWebApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Create([FromBody]CreatePersonDto personDto, CancellationToken cancellationToken)
+        public async Task<ActionResult> Create([FromBody] CreatePersonDto personDto, CancellationToken cancellationToken)
         {
             var id = await _peopleService.AddNewPerson(personDto, cancellationToken);
 
@@ -108,7 +114,7 @@ namespace FlexateWebApi.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Put(int id, [FromBody]UpdatePersonDto personDto, CancellationToken cancellationToken)
+        public async Task<ActionResult> Put(int id, [FromBody] UpdatePersonDto personDto, CancellationToken cancellationToken)
         {
             var result = await _peopleService.UpdatePerson(id, personDto, cancellationToken);
 
@@ -117,7 +123,7 @@ namespace FlexateWebApi.Controllers
                 return NoContent();
             }
 
-            return NotFound();            
+            return NotFound();
         }
 
         /// <summary>
@@ -138,7 +144,6 @@ namespace FlexateWebApi.Controllers
             return NotFound();
         }
 
-        // Delete: PersonController/Delete/5
         /// <summary>
         /// Delete existing person
         /// </summary>
@@ -149,12 +154,35 @@ namespace FlexateWebApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
         {
-            var result = await _peopleService.DeletePerson(id, cancellationToken);
-            if (result)
+            var succeed = await _peopleService.DeletePerson(id, cancellationToken);
+            if (succeed)
             {
                 return NoContent();
             }
             return NotFound();
+        }
+
+        [HttpGet("cars,offices")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> GetFiltered(CancellationToken cancellationToken)
+        {
+            var cars = _carsService.GetAllCars(cancellationToken);
+            var offices = _officesService.GetAllOffices(cancellationToken);
+
+            Task.WaitAll(cars, offices);
+
+            var carsResult = cars;
+            var officesResult = offices;
+
+            if (carsResult == null || officesResult == null)
+            {
+                return NotFound();
+            }
+
+            var result = new object[] { carsResult, officesResult };
+
+            return Ok(result);
         }
     }
 }

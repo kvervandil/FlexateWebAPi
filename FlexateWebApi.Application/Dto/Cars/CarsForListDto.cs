@@ -1,39 +1,32 @@
 ﻿using AutoMapper;
-using FlexateWebApi.Application.Dto.People;
 using FlexateWebApi.Application.Mapping;
 using FlexateWebApi.Domain.Model;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FlexateWebApi.Application.Dto.Cars
 {
-    public class CarsForListDto : IMapFrom<Car>
-    {
-        public List<CarForListDto> CarsList { get; set; }
-        public int CurrentPage { get; set; }
-        public int PageSize { get; set; }
-        public string SearchString { get; set; }
-        public int Count { get; set; }
-        public bool IsFirstPage
+        public class CarsForListDto
         {
-            get
+            public List<CarForListDto> CarsList { get; set; }
+            public int CurrentPage { get; set; }
+            public int PageSize { get; set; }
+            public string SearchString { get; set; }
+            public int Count { get; set; }
+            public bool IsFirstPage
             {
-                return CurrentPage == 1;
+                get
+                {
+                    return CurrentPage == 1;
+                }
             }
-        }
-        public bool IsLastPage
-        {
-            get
+            public bool IsLastPage
             {
-                return NoOfPages == CurrentPage;
+                get
+                {
+                    return NoOfPages == CurrentPage;
+                }
             }
+            public int NoOfPages => (int)Math.Ceiling((double)Count / PageSize);
         }
-        public int NoOfPages => (int)Math.Ceiling((double)Count / PageSize);
-
-        public void Mapping(Profile profile)
-        {
-            profile.CreateMap<Person, PeopleForListDto>();
-        }
-    }
 }

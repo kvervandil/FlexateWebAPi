@@ -22,9 +22,14 @@ namespace FlexateWebApi.Infrastructure.Repositories
         {
             var people = _context.People.AsQueryable();
 
+            //var peopleFiltered = new GenericRepository<Person>(people).Paginate(pageSize, pageNo);
+
             var peopleFiltered = people.Where(p => p.Name.StartsWith(searchString));
-            
-            return await peopleFiltered.Skip(pageSize * (pageNo - 1)).Take(pageSize).ToListAsync(cancellationToken);
+
+            //return await peopleFiltered.Skip(pageSize * (pageNo - 1)).Take(pageSize).ToListAsync(cancellationToken);
+
+            return await new GenericRepository<Person>(people).Paginate(pageSize, pageNo)
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<Person> GetPersonById(int id, CancellationToken cancellationToken)

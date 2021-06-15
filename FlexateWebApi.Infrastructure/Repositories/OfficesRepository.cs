@@ -19,6 +19,11 @@ namespace FlexateWebApi.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<List<Office>> GetAllOffices(CancellationToken cancellationToken)
+        {
+            return await _context.Offices.ToListAsync(cancellationToken);
+        }
+
         public async Task<int> AddOffice(Office office, CancellationToken cancellationToken)
         {
             await _context.Offices.AddAsync(office, cancellationToken);

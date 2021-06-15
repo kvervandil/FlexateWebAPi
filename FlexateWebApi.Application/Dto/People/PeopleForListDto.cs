@@ -8,7 +8,7 @@ using System.Text;
 
 namespace FlexateWebApi.Application.Dto.People
 {
-    public class PeopleForListDto : IMapFrom<Person>
+    public class PeopleForListDto
     {
         public List<PersonForListDto> PeopleList { get; set; }
         public int CurrentPage { get; set; }
@@ -22,10 +22,5 @@ namespace FlexateWebApi.Application.Dto.People
             { return NoOfPages == CurrentPage; }
         }
         public int NoOfPages => (int)Math.Ceiling((double)Count / PageSize);
-
-        public void Mapping(Profile profile)
-        {
-            profile.CreateMap<Person, PeopleForListDto>();
-        }
     }
 }
