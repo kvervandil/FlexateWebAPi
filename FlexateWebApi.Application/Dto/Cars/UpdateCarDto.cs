@@ -10,5 +10,6 @@ namespace FlexateWebApi.Application.Dto.Cars
     {
         public string Model { get; set; }
         public string Brand { get; set; }
+        public int PersonId { get; set; }
     }
 }

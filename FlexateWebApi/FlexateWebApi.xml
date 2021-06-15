@@ -46,14 +46,63 @@
         </member>
         <member name="M:FlexateWebApi.Controllers.CarsController.Patch(System.Int32,System.Threading.CancellationToken)">
             <summary>
-            Update one property in person entity
+            Update one property in car entity
             </summary>
             <param name="id"></param>
             <param name="cancellationToken"></param>
         </member>
         <member name="M:FlexateWebApi.Controllers.CarsController.Delete(System.Int32,System.Threading.CancellationToken)">
             <summary>
-            Delete existing person
+            Delete existing car
+            </summary>
+            <param name="id"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:FlexateWebApi.Controllers.OfficesController.Get(System.Threading.CancellationToken,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get filtered offices
+            </summary>
+            <param name="searchString"></param>
+            <param name="pageSize"></param>
+            <param name="pageNo"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlexateWebApi.Controllers.OfficesController.Get(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Get office by id
+            </summary>
+            <param name="id"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlexateWebApi.Controllers.OfficesController.Create(FlexateWebApi.Application.Dto.Offices.CreateOfficeDto,System.Threading.CancellationToken)">
+            <summary>
+            Create new office
+            </summary>
+            <param name="officeDto"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlexateWebApi.Controllers.OfficesController.Put(System.Int32,FlexateWebApi.Application.Dto.Offices.UpdateOfficeDto,System.Threading.CancellationToken)">
+            <summary>
+            Update existing office
+            </summary>
+            <param name="id"></param>
+            <param name="officeDto"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FlexateWebApi.Controllers.OfficesController.Patch(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Update one property in office entity
+            </summary>
+            <param name="id"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:FlexateWebApi.Controllers.OfficesController.Delete(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Delete existing office
             </summary>
             <param name="id"></param>
             <param name="cancellationToken"></param>

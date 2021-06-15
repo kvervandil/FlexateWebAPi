@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using FlexateWebApi.Application.Dto.People;
 using FlexateWebApi.Application.Interfaces;
-using FlexateWebApi.Domain.Interfaces;
 using FlexateWebApi.Domain.Model;
+using FlexateWebApi.Infrastructure.Entity.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

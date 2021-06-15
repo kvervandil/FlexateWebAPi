@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using FlexateWebApi.Application.Dto.Cars;
 using FlexateWebApi.Application.Interfaces;
-using FlexateWebApi.Domain.Interfaces;
 using FlexateWebApi.Domain.Model;
+using FlexateWebApi.Infrastructure.Entity.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +77,7 @@ namespace FlexateWebApi.Application.Services
             return id;
         }
 
-        public async Task<bool> UpdatePerson(int id, UpdateCarDto carDto,
+        public async Task<bool> UpdateCar(int id, UpdateCarDto carDto,
                                              CancellationToken cancellationToken)
         {
             if (carDto == null)
@@ -90,8 +90,8 @@ namespace FlexateWebApi.Application.Services
                 Id = id,
                 Model = carDto.Model,
                 Brand = carDto.Brand,
+                PersonId = carDto.PersonId
             };
-
 
             return await _carsRepository.UpdateCar(car, cancellationToken);
         }

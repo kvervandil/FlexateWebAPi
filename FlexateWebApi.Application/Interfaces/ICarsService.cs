@@ -13,7 +13,7 @@ namespace FlexateWebApi.Application.Interfaces
                                                       CancellationToken cancellationToken);
         Task<SingleCarDto> GetCarById(int id, CancellationToken cancellationToken);
         Task<int?> AddNewCar(CreateCarDto carDto, CancellationToken cancellationToken);
-        Task<bool> UpdatePerson(int id, UpdateCarDto carDto,
+        Task<bool> UpdateCar(int id, UpdateCarDto carDto,
                                              CancellationToken cancellationToken);
         Task<bool> DeleteCar(int id, CancellationToken cancellationToken);
         Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken);

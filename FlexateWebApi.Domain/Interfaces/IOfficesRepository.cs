@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FlexateWebApi.Entity.Interfaces
+namespace FlexateWebApi.Infrastructure.Entity.Interfaces
 {
     public interface IOfficesRepository
     {

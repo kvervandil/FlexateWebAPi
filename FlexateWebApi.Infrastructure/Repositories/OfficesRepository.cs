@@ -1,5 +1,5 @@
 ﻿using FlexateWebApi.Domain.Model;
-using FlexateWebApi.Entity.Interfaces;
+using FlexateWebApi.Infrastructure.Entity.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

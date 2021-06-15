@@ -1,6 +1,5 @@
-﻿using FlexateWebApi.Domain.Interfaces;
+﻿using FlexateWebApi.Infrastructure.Entity.Interfaces;
 using FlexateWebApi.Infrastructure.Repositories;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -14,6 +13,7 @@ namespace FlexateWebApi.Infrastructure
         {
             services.AddTransient<IPeopleRepository, PeopleRepository>();
             services.AddTransient<ICarsRepository, CarsRepository>();
+            services.AddTransient<IOfficesRepository, OfficesRepository>();
 
             return services;
         }

@@ -14,6 +14,7 @@ namespace FlexateWebApi.Application
         {
             services.AddTransient<IPeopleService, PeopleService>();
             services.AddTransient<ICarsService, CarsService>();
+            services.AddTransient<IOfficesService, OfficesService>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;
