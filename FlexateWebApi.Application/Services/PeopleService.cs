@@ -4,6 +4,7 @@ using FlexateWebApi.Application.Dto.People;
 using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain.Model;
 using FlexateWebApi.Infrastructure.Entity.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,37 +17,30 @@ namespace FlexateWebApi.Application.Services
     {
         private readonly IPeopleRepository _peopleRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<PeopleService> _logger;
 
-        public PeopleService(IPeopleRepository peopleRepository, IMapper mapper)
+        public PeopleService(IPeopleRepository peopleRepository, IMapper mapper, ILogger<PeopleService> logger)
         {
             _peopleRepository = peopleRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<PagedResultDto<PersonForListDto>> GetPeople(int pageSize, int pageNo, string searchString,
+        public async Task<PagedResultDto<SinglePersonDto>> GetPeople(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken)
         {
             var people = await _peopleRepository.GetPeople(pageSize, pageNo, searchString, cancellationToken);
             var noOfAllPeople = await _peopleRepository.GetNoOfPeople(cancellationToken);
 
-            List<PersonForListDto> peopleForListDto = _mapper.Map<List<PersonForListDto>>(people);
+            var peopleForListDto = _mapper.Map<List<SinglePersonDto>>(people);
 
-            var model = new PagedResultDto<PersonForListDto>() { 
+            var model = new PagedResultDto<SinglePersonDto>() { 
                 Items = peopleForListDto,
                 CurrentPage = pageNo,
                 PageSize = pageSize,
                 SearchString = searchString,
                 Count = noOfAllPeople
             };
-
-            /*var model = new PeopleForListDto()
-            {
-                PeopleList = peopleForListDto,
-                CurrentPage = pageNo,
-                PageSize = pageSize,
-                SearchString = searchString,
-                Count = noOfAllPeople
-            };*/
 
             return model;
         }
@@ -113,8 +107,9 @@ namespace FlexateWebApi.Application.Services
             {
                 return await _peopleRepository.DeletePerson(id, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }            
         }
@@ -125,9 +120,9 @@ namespace FlexateWebApi.Application.Services
             {
                 return await _peopleRepository.UpdateWithDeletionFlag(id, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                _logger.LogError(e.Message);
                 return false;
             }
         }

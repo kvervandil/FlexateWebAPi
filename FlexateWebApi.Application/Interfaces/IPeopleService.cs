@@ -11,7 +11,7 @@ namespace FlexateWebApi.Application.Interfaces
 {
     public interface IPeopleService
     {
-        Task<PagedResultDto<PersonForListDto>> GetPeople(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken);
+        Task<PagedResultDto<SinglePersonDto>> GetPeople(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken);
         Task<SinglePersonDto> GetPersonById(int id, CancellationToken cancellationToken);
         Task<int?> AddNewPerson(CreatePersonDto personDto, CancellationToken cancellationToken);
         Task<bool> UpdatePerson(int id, UpdatePersonDto personDto, CancellationToken cancellationToken);

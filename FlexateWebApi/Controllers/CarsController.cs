@@ -38,12 +38,10 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PagedResultDto<CarForListDto>>> Get(CancellationToken cancellationToken,
+        public async Task<ActionResult<PagedResultDto<SingleCarDto>>> Get(CancellationToken cancellationToken,
                                                               string searchString = "", int pageSize = 10,
                                                               int pageNo = 1)
         {
-            _logger.LogInformation("we are in Index action");
-
             var model = await _carsService.GetCars(pageSize, pageNo, searchString, cancellationToken);
 
             if (model.Count == 0)

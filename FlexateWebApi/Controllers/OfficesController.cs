@@ -15,9 +15,8 @@ namespace FlexateWebApi.Controllers
     [Route("api/offices")]
     public class OfficesController : Controller
     {
-        IOfficesService _officesService;
-
-        public ILogger _logger { get; }
+        private readonly IOfficesService _officesService;
+        private ILogger<OfficesController> _logger { get; }
 
         public OfficesController(IOfficesService officesService, ILogger<OfficesController> logger)
         {
@@ -37,12 +36,10 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PagedResultDto<OfficeForListDto>>> Get(CancellationToken cancellationToken,
+        public async Task<ActionResult<PagedResultDto<SingleOfficeDto>>> Get(CancellationToken cancellationToken,
                                                               string searchString = "", int pageSize = 10,
                                                               int pageNo = 1)
         {
-            _logger.LogInformation("we are in Get action");
-
             var model = await _officesService.GetOffices(pageSize, pageNo, searchString, cancellationToken);
 
             if (model.Count == 0)

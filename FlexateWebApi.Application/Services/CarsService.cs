@@ -4,6 +4,7 @@ using FlexateWebApi.Application.Dto.Cars;
 using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain.Model;
 using FlexateWebApi.Infrastructure.Entity.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,23 +18,25 @@ namespace FlexateWebApi.Application.Services
     {
         private ICarsRepository _carsRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<CarsService> _logger;
 
-        public CarsService(ICarsRepository carsRepository, IMapper mapper)
+        public CarsService(ICarsRepository carsRepository, IMapper mapper, ILogger<CarsService> logger)
         {
             _carsRepository = carsRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<PagedResultDto<CarForListDto>> GetCars(int pageSize, int pageNo, string searchString,
+        public async Task<PagedResultDto<SingleCarDto>> GetCars(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken)
         {
             var cars = await _carsRepository.GetCars(pageSize, pageNo, searchString, cancellationToken);
 
             var noOfCars = await _carsRepository.GetNoOfCars(cancellationToken);
 
-            List<CarForListDto> carsDto = _mapper.Map<List<CarForListDto>>(cars);
+            var carsDto = _mapper.Map<List<SingleCarDto>>(cars);
 
-            var carsForList = new PagedResultDto<CarForListDto>()
+            var carsForList = new PagedResultDto<SingleCarDto>()
             {
                 Items = carsDto,
                 CurrentPage = pageNo,
@@ -101,8 +104,9 @@ namespace FlexateWebApi.Application.Services
             {
                 return await _carsRepository.DeleteCar(id, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
         }
@@ -113,19 +117,20 @@ namespace FlexateWebApi.Application.Services
             {
                 return await _carsRepository.UpdateWithDeletionFlag(id, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
         }
 
-        public async Task<PagedResultDto<CarForListDto>> GetAllCars(CancellationToken cancellationToken)
+        public async Task<PagedResultDto<SingleCarDto>> GetAllCars(CancellationToken cancellationToken)
         {
             var cars = await _carsRepository.GetAllCars(cancellationToken);
 
-            List<CarForListDto> carsDto = _mapper.Map<List<CarForListDto>>(cars);
+            var carsDto = _mapper.Map<List<SingleCarDto>>(cars);
 
-            var carsForList = new PagedResultDto<CarForListDto>
+            var carsForList = new PagedResultDto<SingleCarDto>
             {
                 Items = carsDto,
             };
@@ -140,6 +145,5 @@ namespace FlexateWebApi.Application.Services
 
             return carsForPersonDto;
         }
-
     }
 }

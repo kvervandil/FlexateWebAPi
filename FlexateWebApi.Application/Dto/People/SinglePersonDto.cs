@@ -9,13 +9,13 @@ namespace FlexateWebApi.Application.Dto.People
 {
     public class SinglePersonDto : IMapFrom<Person>
     {
-        public int Age { get; set; }
-        public string Address { get; set; }
         public string Name { get; set; }
+        public string Address { get; set; }
+        public int Age { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<Person, UpdatePersonDto>();
+            profile.CreateMap<Person, SinglePersonDto>();
         }
     }
 }
