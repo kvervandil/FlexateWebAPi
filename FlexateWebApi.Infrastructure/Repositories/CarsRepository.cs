@@ -1,6 +1,7 @@
 ﻿using FlexateWebApi.Domain.Model;
 using FlexateWebApi.Infrastructure.Entity.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,12 @@ namespace FlexateWebApi.Infrastructure.Repositories
     public class CarsRepository : ICarsRepository
     {
         private readonly Context _context;
+        private readonly ILogger<CarsRepository> _logger;
 
-        public CarsRepository(Context context)
+        public CarsRepository(Context context, ILogger<CarsRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<List<Car>> GetAllCars(CancellationToken cancellationToken)
@@ -42,14 +45,14 @@ namespace FlexateWebApi.Infrastructure.Repositories
             }
 
             _context.Remove(car);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             return true;
         }
 
         public async Task<Car> GetCarById(int id, CancellationToken cancellationToken)
         {
-            return await _context.Cars.FindAsync(new object[] { id }, cancellationToken);
+            return await _context.Cars.SingleOrDefaultAsync(car => car.Id == id, cancellationToken);
 
         }
 
@@ -71,17 +74,20 @@ namespace FlexateWebApi.Infrastructure.Repositories
         {
             try
             {
-                _context.Attach(car);
-                _context.Entry(car).Property("Model").IsModified = true;
-                _context.Entry(car).Property("Branch").IsModified = true;
-                _context.Entry(car).Property("PersonId").IsModified = true;
+                var carToUpdate = await GetCarById(car.Id, cancellationToken);
 
+                carToUpdate.Model = car.Model;
+                carToUpdate.Brand = car.Brand;
+                //carToUpdate.PersonId = car.PersonId;
+                                
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return true;
             }
-            catch (System.Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+
                 return false;
             }
         }
@@ -90,19 +96,30 @@ namespace FlexateWebApi.Infrastructure.Repositories
         {
             try
             {
-                var car = GetCarById(id, cancellationToken);
+                var carToUpdate = await GetCarById(id, cancellationToken);
 
-                _context.Attach(car);
-                _context.Entry(car).Property("IsDeleted").IsModified = true;
+                carToUpdate.IsDeleted = true;
 
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return true;
             }
-            catch (System.Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
+        }
+
+        public Task<List<Car>> GetCarsByPersonId(int personId, CancellationToken cancellationToken)
+        {
+            var personCars = _context.PersonCar.Where(personCar => personCar.PersonId == personId);
+
+            var cars = _context.PersonCar.Where(personCar => personCar.PersonId == personId)
+                .Select(item => item.Car);
+
+
+            return cars.ToListAsync(cancellationToken);
         }
     }
 }

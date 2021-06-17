@@ -10,7 +10,7 @@ namespace FlexateWebApi.Application.Interfaces
 {
     public interface IOfficesService
     {
-        Task<GenericForListDto<OfficeForListDto>> GetOffices(int pageSize, int pageNo, string searchString,
+        Task<PagedResultDto<OfficeForListDto>> GetOffices(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken);
         Task<SingleOfficeDto> GetOfficeById(int id, CancellationToken cancellationToken);
         Task<int?> AddNewOffice(CreateOfficeDto officeDto, CancellationToken cancellationToken);
@@ -18,6 +18,7 @@ namespace FlexateWebApi.Application.Interfaces
                                              CancellationToken cancellationToken);
         Task<bool> DeleteOffice(int id, CancellationToken cancellationToken);
         Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken);
-        Task<OfficesForListDto> GetAllOffices(CancellationToken cancellationToken);
+        Task<PagedResultDto<OfficeForListDto>> GetAllOffices(CancellationToken cancellationToken);
+        object GetOfficesByPersonId(int personId, CancellationToken cancellationToken);
     }
 }

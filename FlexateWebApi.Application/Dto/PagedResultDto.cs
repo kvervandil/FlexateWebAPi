@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FlexateWebApi.Application.Dto
 {
-    public class GenericForListDto<T>
+    public class PagedResultDto<T>
     {
         public List<T> Items { get; set; }
         public int CurrentPage { get; set; }

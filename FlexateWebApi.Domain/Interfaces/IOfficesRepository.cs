@@ -11,7 +11,7 @@ namespace FlexateWebApi.Infrastructure.Entity.Interfaces
     {
         Task<List<Office>> GetOffices(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken);
         Task<List<Office>> GetAllOffices(CancellationToken cancellationToken);
-        Task<Car> GetOfficeById(int id, CancellationToken cancellationToken);
+        Task<Office> GetOfficeById(int id, CancellationToken cancellationToken);
         Task<int> GetNoOfOffices(CancellationToken cancellationToken);
         Task<int> AddOffice(Office office, CancellationToken cancellationToken);
         Task<bool> UpdateOffice(Office office, CancellationToken cancellationToken);

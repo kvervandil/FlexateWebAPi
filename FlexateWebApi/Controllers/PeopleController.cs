@@ -26,6 +26,8 @@ namespace FlexateWebApi.Controllers
         /// </summary>
         /// <param name="personService"></param>
         /// <param name="logger"></param>
+        /// <param name="carsService"></param>
+        /// <param name="officesService"></param>
         public PeopleController(IPeopleService personService, ILogger<PeopleController> logger, ICarsService carsService,
                                 IOfficesService officesService)
         {
@@ -46,7 +48,7 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GenericForListDto<PersonForListDto>>> Get(CancellationToken cancellationToken,
+        public async Task<ActionResult<PagedResultDto<PersonForListDto>>> Get(CancellationToken cancellationToken,
                                                               string searchString = "", int pageSize = 10,
                                                               int pageNo = 1)
         {
@@ -101,7 +103,7 @@ namespace FlexateWebApi.Controllers
                 return BadRequest();
             }
 
-            return Created($"api/person/{id}", id);
+            return Created(nameof(Get), id);
         }
 
         /// <summary>
@@ -161,7 +163,7 @@ namespace FlexateWebApi.Controllers
             }
             return NotFound();
         }
-
+/*
         [HttpGet("cars,offices")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -183,6 +185,21 @@ namespace FlexateWebApi.Controllers
             var result = new object[] { carsResult, officesResult };
 
             return Ok(result);
+        }*/
+
+        [HttpGet("cars,offices/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> GetFiltered(CancellationToken cancellationToken, int id)
+        {
+            var carsForPerson = _carsService.GetCarsByPersonId(id, cancellationToken);
+            //var officesForOffices = _officesService.GetOfficesByPersonId(personId);
+
+            Task.WaitAll(carsForPerson);
+
+            var carsResult = carsForPerson.Result;
+
+            return Ok(carsResult);
         }
     }
 }

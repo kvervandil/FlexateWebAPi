@@ -10,7 +10,9 @@ namespace FlexateWebApi.Domain.Model
         public string City { get; set; }
         public string Address { get; set; }
         public int PersonId { get; set; }
-        public virtual Person Person { get; set; }
         public bool IsDeleted { get; set; }
+
+        public virtual Person Person { get; set; }
+
     }
 }

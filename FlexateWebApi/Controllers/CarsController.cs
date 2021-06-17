@@ -38,7 +38,7 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GenericForListDto<CarForListDto>>> Get(CancellationToken cancellationToken,
+        public async Task<ActionResult<PagedResultDto<CarForListDto>>> Get(CancellationToken cancellationToken,
                                                               string searchString = "", int pageSize = 10,
                                                               int pageNo = 1)
         {
@@ -93,7 +93,8 @@ namespace FlexateWebApi.Controllers
                 return BadRequest();
             }
 
-            return Created($"api/cars/{id}", id);
+            //return Created($"api/cars/{id}", id);
+            return Created(nameof(Get), id);
         }
 
         /// <summary>

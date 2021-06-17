@@ -15,7 +15,7 @@ namespace FlexateWebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<string>> GetAsync()
+        public ActionResult<string> GetAsync()
         {
             return "Healthy";
         }

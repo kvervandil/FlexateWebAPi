@@ -23,7 +23,7 @@ namespace FlexateWebApi.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<GenericForListDto<PersonForListDto>> GetPeople(int pageSize, int pageNo, string searchString,
+        public async Task<PagedResultDto<PersonForListDto>> GetPeople(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken)
         {
             var people = await _peopleRepository.GetPeople(pageSize, pageNo, searchString, cancellationToken);
@@ -31,7 +31,7 @@ namespace FlexateWebApi.Application.Services
 
             List<PersonForListDto> peopleForListDto = _mapper.Map<List<PersonForListDto>>(people);
 
-            var model = new GenericForListDto<PersonForListDto>() { 
+            var model = new PagedResultDto<PersonForListDto>() { 
                 Items = peopleForListDto,
                 CurrentPage = pageNo,
                 PageSize = pageSize,
@@ -82,7 +82,7 @@ namespace FlexateWebApi.Application.Services
                 return null;
             }
 
-            int id = await _peopleRepository.AddPerson(person, cancellationToken);
+            var id = await _peopleRepository.AddPerson(person, cancellationToken);
 
             return id;
         }

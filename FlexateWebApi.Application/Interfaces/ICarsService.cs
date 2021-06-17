@@ -10,7 +10,7 @@ namespace FlexateWebApi.Application.Interfaces
 {
     public interface ICarsService
     {
-        Task<GenericForListDto<CarForListDto>> GetCars(int pageSize, int pageNo, string searchString,
+        Task<PagedResultDto<CarForListDto>> GetCars(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken);
         Task<SingleCarDto> GetCarById(int id, CancellationToken cancellationToken);
         Task<int?> AddNewCar(CreateCarDto carDto, CancellationToken cancellationToken);
@@ -18,6 +18,7 @@ namespace FlexateWebApi.Application.Interfaces
                                              CancellationToken cancellationToken);
         Task<bool> DeleteCar(int id, CancellationToken cancellationToken);
         Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken);
-        Task<CarsForListDto> GetAllCars(CancellationToken cancellationToken);
+        Task<PagedResultDto<CarForListDto>> GetAllCars(CancellationToken cancellationToken);
+        Task<List<SingleCarDto>> GetCarsByPersonId(int personId, CancellationToken cancellationToken);
     }
 }

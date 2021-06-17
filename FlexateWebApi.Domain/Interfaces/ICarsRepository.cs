@@ -18,5 +18,6 @@ namespace FlexateWebApi.Infrastructure.Entity.Interfaces
         Task<bool> UpdateCar(Car car, CancellationToken cancellationToken);
         Task<bool> DeleteCar(int id, CancellationToken cancellationToken);
         Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken);
+        Task<List<Car>> GetCarsByPersonId(int personId, CancellationToken cancellationToken);
     }
 }

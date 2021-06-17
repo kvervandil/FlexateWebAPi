@@ -23,7 +23,7 @@ namespace FlexateWebApi.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<GenericForListDto<OfficeForListDto>> GetOffices(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken)
+        public async Task<PagedResultDto<OfficeForListDto>> GetOffices(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken)
         {
             var offices = await _officesRepository.GetOffices(pageSize, pageNo, searchString, cancellationToken);
 
@@ -31,7 +31,7 @@ namespace FlexateWebApi.Application.Services
 
             List<OfficeForListDto> officesDto = _mapper.Map<List<OfficeForListDto>>(offices);
 
-            var officesForListDto = new GenericForListDto<OfficeForListDto>()
+            var officesForListDto = new PagedResultDto<OfficeForListDto>()
             {
                 Items = officesDto,
                 CurrentPage = pageNo,
@@ -118,19 +118,24 @@ namespace FlexateWebApi.Application.Services
             }
         }
 
-        public async Task<OfficesForListDto> GetAllOffices(CancellationToken cancellationToken)
+        public async Task<PagedResultDto<OfficeForListDto>> GetAllOffices(CancellationToken cancellationToken)
         {
             var offices = await _officesRepository.GetAllOffices(cancellationToken);
 
 
             List<OfficeForListDto> officesDto = _mapper.Map<List<OfficeForListDto>>(offices);
 
-            var officesForListDto = new OfficesForListDto()
+            var officesForListDto = new PagedResultDto<OfficeForListDto>
             {
-                OfficesList = officesDto,
+                Items = officesDto,
             };
 
             return officesForListDto;
+        }
+
+        public object GetOfficesByPersonId(int personId, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

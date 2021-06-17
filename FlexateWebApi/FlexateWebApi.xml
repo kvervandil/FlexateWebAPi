@@ -118,6 +118,8 @@
             </summary>
             <param name="personService"></param>
             <param name="logger"></param>
+            <param name="carsService"></param>
+            <param name="officesService"></param>
         </member>
         <member name="M:FlexateWebApi.Controllers.PeopleController.Get(System.Threading.CancellationToken,System.String,System.Int32,System.Int32)">
             <summary>

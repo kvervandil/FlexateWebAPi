@@ -24,7 +24,7 @@ namespace FlexateWebApi.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<GenericForListDto<CarForListDto>> GetCars(int pageSize, int pageNo, string searchString,
+        public async Task<PagedResultDto<CarForListDto>> GetCars(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken)
         {
             var cars = await _carsRepository.GetCars(pageSize, pageNo, searchString, cancellationToken);
@@ -33,7 +33,7 @@ namespace FlexateWebApi.Application.Services
 
             List<CarForListDto> carsDto = _mapper.Map<List<CarForListDto>>(cars);
 
-            var carsForList = new GenericForListDto<CarForListDto>()
+            var carsForList = new PagedResultDto<CarForListDto>()
             {
                 Items = carsDto,
                 CurrentPage = pageNo,
@@ -63,7 +63,6 @@ namespace FlexateWebApi.Application.Services
             {
                 Model = carDto.Model,
                 Brand = carDto.Brand,
-                PersonId = carDto.PersonId,
                 IsDeleted = false
             };
 
@@ -91,7 +90,6 @@ namespace FlexateWebApi.Application.Services
                 Id = id,
                 Model = carDto.Model,
                 Brand = carDto.Brand,
-                PersonId = carDto.PersonId
             };
 
             return await _carsRepository.UpdateCar(car, cancellationToken);
@@ -121,18 +119,27 @@ namespace FlexateWebApi.Application.Services
             }
         }
 
-        public async Task<CarsForListDto> GetAllCars(CancellationToken cancellationToken)
+        public async Task<PagedResultDto<CarForListDto>> GetAllCars(CancellationToken cancellationToken)
         {
             var cars = await _carsRepository.GetAllCars(cancellationToken);
 
             List<CarForListDto> carsDto = _mapper.Map<List<CarForListDto>>(cars);
 
-            var carsForList = new CarsForListDto()
+            var carsForList = new PagedResultDto<CarForListDto>
             {
-                CarsList = carsDto,
+                Items = carsDto,
             };
 
             return carsForList;
         }
+        public async Task<List<SingleCarDto>> GetCarsByPersonId(int personId, CancellationToken cancellationToken)
+        {
+            var cars = await _carsRepository.GetCarsByPersonId(personId, cancellationToken);
+
+            List<SingleCarDto> carsForPersonDto = _mapper.Map<List<SingleCarDto>>(cars);
+
+            return carsForPersonDto;
+        }
+
     }
 }
