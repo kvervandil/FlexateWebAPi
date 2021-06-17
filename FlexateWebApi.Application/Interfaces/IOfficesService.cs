@@ -19,6 +19,6 @@ namespace FlexateWebApi.Application.Interfaces
         Task<bool> DeleteOffice(int id, CancellationToken cancellationToken);
         Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken);
         Task<PagedResultDto<OfficeForListDto>> GetAllOffices(CancellationToken cancellationToken);
-        object GetOfficesByPersonId(int personId, CancellationToken cancellationToken);
+        Task<List<SingleOfficeDto>> GetOfficesByPersonId(int personId, CancellationToken cancellationToken);
     }
 }

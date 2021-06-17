@@ -64,7 +64,7 @@ namespace FlexateWebApi.Infrastructure.Repositories
         {
             var offices = _context.Offices.AsQueryable();
 
-            var officesFiltered = offices.Where(p => p.City.StartsWith(searchString));
+            var officesFiltered = offices.Where(p => p.SpaceType.StartsWith(searchString));
 
             return await officesFiltered.Skip(pageSize * (pageNo - 1)).Take(pageSize).ToListAsync(cancellationToken);
         }
@@ -75,9 +75,8 @@ namespace FlexateWebApi.Infrastructure.Repositories
             {
                 var officeToUpdate = await GetOfficeById(office.Id, cancellationToken);
 
-                officeToUpdate.City = office.City;
-                officeToUpdate.Address = office.Address;
-                officeToUpdate.PersonId = office.PersonId;
+                officeToUpdate.SpaceType = office.SpaceType;
+                officeToUpdate.IsGroundFloor = office.IsGroundFloor;
 
                 await _context.SaveChangesAsync(cancellationToken);
 
@@ -107,6 +106,13 @@ namespace FlexateWebApi.Infrastructure.Repositories
                 _logger.LogError(e.Message);
                 return false;
             }
+        }
+
+        public Task<List<Office>> GetOfficesByPersonid(int personId, CancellationToken cancellationToken)
+        {
+            var offices = _context.PersonOffice.Where(personOffice => personOffice.PersonId == personId).Select(item => item.Office);
+
+            return offices.ToListAsync(cancellationToken);
         }
     }
 }

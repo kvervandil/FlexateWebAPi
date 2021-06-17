@@ -163,29 +163,6 @@ namespace FlexateWebApi.Controllers
             }
             return NotFound();
         }
-/*
-        [HttpGet("cars,offices")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> GetFiltered(CancellationToken cancellationToken)
-        {
-            var cars = _carsService.GetAllCars(cancellationToken);
-            var offices = _officesService.GetAllOffices(cancellationToken);
-
-            Task.WaitAll(cars, offices);
-
-            var carsResult = cars;
-            var officesResult = offices;
-
-            if (carsResult == null || officesResult == null)
-            {
-                return NotFound();
-            }
-
-            var result = new object[] { carsResult, officesResult };
-
-            return Ok(result);
-        }*/
 
         [HttpGet("cars,offices/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -193,13 +170,14 @@ namespace FlexateWebApi.Controllers
         public async Task<ActionResult> GetFiltered(CancellationToken cancellationToken, int id)
         {
             var carsForPerson = _carsService.GetCarsByPersonId(id, cancellationToken);
-            //var officesForOffices = _officesService.GetOfficesByPersonId(personId);
+            var officesForPerson = _officesService.GetOfficesByPersonId(id, cancellationToken);
 
-            Task.WaitAll(carsForPerson);
+            Task.WaitAll(carsForPerson, officesForPerson);
 
             var carsResult = carsForPerson.Result;
+            var officesResult = officesForPerson.Result;
 
-            return Ok(carsResult);
+            return Ok(new object[] { carsResult, officesResult });
         }
     }
 }

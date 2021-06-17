@@ -13,7 +13,7 @@ namespace FlexateWebApi.Infrastructure
         public DbSet<Car> Cars { get; set; }
         public DbSet<Office> Offices { get; set; }
         public DbSet<PersonCar> PersonCar { get; set; }
-
+        public DbSet<PersonOffice> PersonOffice { get; set; }
         public Context(DbContextOptions<Context> options) : base(options) 
         {
 

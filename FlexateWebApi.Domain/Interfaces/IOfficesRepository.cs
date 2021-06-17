@@ -17,5 +17,6 @@ namespace FlexateWebApi.Infrastructure.Entity.Interfaces
         Task<bool> UpdateOffice(Office office, CancellationToken cancellationToken);
         Task<bool> DeleteOffice(int id, CancellationToken cancellationToken);
         Task<bool> UpdateWithDeletionFlag(int id, CancellationToken cancellationToken);
+        Task<List<Office>> GetOfficesByPersonid(int personId, CancellationToken cancellationToken);
     }
 }

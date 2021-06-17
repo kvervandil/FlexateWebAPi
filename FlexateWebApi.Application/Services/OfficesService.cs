@@ -59,14 +59,10 @@ namespace FlexateWebApi.Application.Services
         {
             Office office = new Office()
             {
-                City = officeDto.City,
-                Address = officeDto.Address,
-                PersonId = officeDto.PersonId,
                 IsDeleted = false
             };
 
-            if (string.IsNullOrEmpty(office.City)
-                || string.IsNullOrEmpty(office.Address))
+            if (string.IsNullOrEmpty(office.SpaceType))
             {
                 return null;
             }
@@ -98,9 +94,6 @@ namespace FlexateWebApi.Application.Services
             Office office = new Office()
             {
                 Id = id,
-                City = officeDto.City,
-                Address = officeDto.Address,
-                PersonId = officeDto.PersonId
             };
 
             return await _officesRepository.UpdateOffice(office, cancellationToken);
@@ -133,9 +126,13 @@ namespace FlexateWebApi.Application.Services
             return officesForListDto;
         }
 
-        public object GetOfficesByPersonId(int personId, CancellationToken cancellationToken)
+        public async Task<List<SingleOfficeDto>> GetOfficesByPersonId(int personId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var offices = await _officesRepository.GetOfficesByPersonid(personId, cancellationToken);
+
+            var officesDto = _mapper.Map<List<SingleOfficeDto>>(offices);
+
+            return officesDto;
         }
     }
 }

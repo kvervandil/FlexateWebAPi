@@ -10,8 +10,8 @@ namespace FlexateWebApi.Application.Dto.Offices
     public class CreateOfficeDto : IMapFrom<Office>
     {
         public string City { get; set; }
-        public string Address { get; set; }
-        public int PersonId { get; set; }
+        public string SpaceType { get; set; }
+        public bool IsGroundFloor { get; set; }
 
         public void Mapping(Profile profile)
         {
