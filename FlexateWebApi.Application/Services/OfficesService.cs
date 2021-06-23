@@ -60,13 +60,9 @@ namespace FlexateWebApi.Application.Services
 
         public async Task<int?> AddNewOffice(CreateOfficeDto officeDto, CancellationToken cancellationToken)
         {
-            Office office = new Office()
-            {
-                IsDeleted = false,
-                IsGroundFloor = officeDto.IsGroundFloor,
-                SpaceType = officeDto.SpaceType
-            };
 
+            Office office = _mapper.Map<Office>(officeDto);
+            
             if (string.IsNullOrEmpty(office.SpaceType))
             {
                 return null;
@@ -97,12 +93,15 @@ namespace FlexateWebApi.Application.Services
                 return false;
             }
 
-            Office office = new Office()
+            Office office = _mapper.Map<Office>(officeDto);
+            office.Id = id;
+
+            /*Office office = new Office()
             {
                 Id = id,
                 SpaceType = officeDto.SpaceType,
                 IsGroundFloor = officeDto.IsGroundFloor
-            };
+            };*/
 
             return await _officesRepository.UpdateOffice(office, cancellationToken);
         }

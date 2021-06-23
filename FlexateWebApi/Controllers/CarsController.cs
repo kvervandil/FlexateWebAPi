@@ -91,7 +91,6 @@ namespace FlexateWebApi.Controllers
                 return BadRequest();
             }
 
-            //return Created($"api/cars/{id}", id);
             return Created(nameof(Get), id);
         }
 

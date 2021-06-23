@@ -61,13 +61,15 @@ namespace FlexateWebApi.Application.Services
 
         public async Task<int?> AddNewPerson(CreatePersonDto personDto, CancellationToken cancellationToken)
         {
-            Person person = new Person()
+            /*Person person = new Person()
             {
                 Name = personDto.Name,
                 Age = personDto.Age,
                 Address = personDto.Address,
                 IsDeleted = false
-            };
+            };*/
+
+            Person person = _mapper.Map<Person>(personDto);
 
             if (string.IsNullOrEmpty(person.Name)
                 || string.IsNullOrEmpty(person.Address)
@@ -89,14 +91,15 @@ namespace FlexateWebApi.Application.Services
                 return false;
             }
 
-            Person person = new Person()
+            /*Person person = new Person()
             {
                 Id = id,
                 Address = personDto.Address,
                 Age = personDto.Age,
                 Name = personDto.Name
-            };
+            };*/
 
+            Person person = _mapper.Map<Person>(personDto);
             
             return await _peopleRepository.UpdatePerson(person, cancellationToken);
         }

@@ -62,12 +62,7 @@ namespace FlexateWebApi.Application.Services
 
         public async Task<int?> AddNewCar(CreateCarDto carDto, CancellationToken cancellationToken)
         {
-            Car car = new Car()
-            {
-                Model = carDto.Model,
-                Brand = carDto.Brand,
-                IsDeleted = false
-            };
+            Car car = _mapper.Map<Car>(carDto);
 
             if (string.IsNullOrEmpty(car.Model)
                 || string.IsNullOrEmpty(car.Brand))
@@ -88,12 +83,8 @@ namespace FlexateWebApi.Application.Services
                 return false;
             }
 
-            Car car= new Car()
-            {
-                Id = id,
-                Model = carDto.Model,
-                Brand = carDto.Brand,
-            };
+            Car car= _mapper.Map<Car>(carDto);
+            car.Id = id;
 
             return await _carsRepository.UpdateCar(car, cancellationToken);
         }

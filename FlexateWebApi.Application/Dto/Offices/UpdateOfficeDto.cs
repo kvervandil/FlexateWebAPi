@@ -9,7 +9,6 @@ namespace FlexateWebApi.Application.Dto.Offices
 {
     public class UpdateOfficeDto : IMapFrom<Office>
     {
-        public int Id { get; set; }
         public string SpaceType { get; set; }
         public bool IsGroundFloor { get; set; }
 
