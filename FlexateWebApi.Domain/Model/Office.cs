@@ -7,10 +7,8 @@ namespace FlexateWebApi.Domain.Model
     public class Office
     {
         public int Id { get; set; }
-        public string City { get; set; }
-        public string Address { get; set; }
-        public int PersonId { get; set; }
-        public virtual Person Person { get; set; }
+        public string SpaceType { get; set; }
+        public bool IsGroundFloor { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

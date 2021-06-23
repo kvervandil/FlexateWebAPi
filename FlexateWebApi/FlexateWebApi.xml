@@ -112,12 +112,14 @@
             crud operations on Person
             </summary>
         </member>
-        <member name="M:FlexateWebApi.Controllers.PeopleController.#ctor(FlexateWebApi.Application.Interfaces.IPeopleService,Microsoft.Extensions.Logging.ILogger{FlexateWebApi.Controllers.PeopleController})">
+        <member name="M:FlexateWebApi.Controllers.PeopleController.#ctor(FlexateWebApi.Application.Interfaces.IPeopleService,Microsoft.Extensions.Logging.ILogger{FlexateWebApi.Controllers.PeopleController},FlexateWebApi.Application.Interfaces.ICarsService,FlexateWebApi.Application.Interfaces.IOfficesService)">
             <summary>
             
             </summary>
             <param name="personService"></param>
             <param name="logger"></param>
+            <param name="carsService"></param>
+            <param name="officesService"></param>
         </member>
         <member name="M:FlexateWebApi.Controllers.PeopleController.Get(System.Threading.CancellationToken,System.String,System.Int32,System.Int32)">
             <summary>

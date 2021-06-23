@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using FlexateWebApi.Application.Dto;
 using FlexateWebApi.Application.Dto.Cars;
 using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain.Model;
 using FlexateWebApi.Infrastructure.Entity.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,25 +18,27 @@ namespace FlexateWebApi.Application.Services
     {
         private ICarsRepository _carsRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<CarsService> _logger;
 
-        public CarsService(ICarsRepository carsRepository, IMapper mapper)
+        public CarsService(ICarsRepository carsRepository, IMapper mapper, ILogger<CarsService> logger)
         {
             _carsRepository = carsRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<CarsForListDto> GetCars(int pageSize, int pageNo, string searchString,
+        public async Task<PagedResultDto<SingleCarDto>> GetCars(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken)
         {
             var cars = await _carsRepository.GetCars(pageSize, pageNo, searchString, cancellationToken);
 
             var noOfCars = await _carsRepository.GetNoOfCars(cancellationToken);
 
-            List<CarForListDto> carsDto = _mapper.Map<List<CarForListDto>>(cars);
+            var carsDto = _mapper.Map<List<SingleCarDto>>(cars);
 
-            var carsForList = new CarsForListDto()
+            var carsForList = new PagedResultDto<SingleCarDto>()
             {
-                CarsList = carsDto,
+                Items = carsDto,
                 CurrentPage = pageNo,
                 Count = noOfCars,
                 PageSize = pageSize
@@ -58,13 +62,7 @@ namespace FlexateWebApi.Application.Services
 
         public async Task<int?> AddNewCar(CreateCarDto carDto, CancellationToken cancellationToken)
         {
-            Car car = new Car()
-            {
-                Model = carDto.Model,
-                Brand = carDto.Brand,
-                PersonId = carDto.PersonId,
-                IsDeleted = false
-            };
+            Car car = _mapper.Map<Car>(carDto);
 
             if (string.IsNullOrEmpty(car.Model)
                 || string.IsNullOrEmpty(car.Brand))
@@ -85,13 +83,8 @@ namespace FlexateWebApi.Application.Services
                 return false;
             }
 
-            Car car= new Car()
-            {
-                Id = id,
-                Model = carDto.Model,
-                Brand = carDto.Brand,
-                PersonId = carDto.PersonId
-            };
+            Car car= _mapper.Map<Car>(carDto);
+            car.Id = id;
 
             return await _carsRepository.UpdateCar(car, cancellationToken);
         }
@@ -102,8 +95,9 @@ namespace FlexateWebApi.Application.Services
             {
                 return await _carsRepository.DeleteCar(id, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
         }
@@ -114,10 +108,33 @@ namespace FlexateWebApi.Application.Services
             {
                 return await _carsRepository.UpdateWithDeletionFlag(id, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
+        }
+
+        public async Task<PagedResultDto<SingleCarDto>> GetAllCars(CancellationToken cancellationToken)
+        {
+            var cars = await _carsRepository.GetAllCars(cancellationToken);
+
+            var carsDto = _mapper.Map<List<SingleCarDto>>(cars);
+
+            var carsForList = new PagedResultDto<SingleCarDto>
+            {
+                Items = carsDto,
+            };
+
+            return carsForList;
+        }
+        public async Task<List<SingleCarDto>> GetCarsByPersonId(int personId, CancellationToken cancellationToken)
+        {
+            var cars = await _carsRepository.GetCarsByPersonId(personId, cancellationToken);
+
+            List<SingleCarDto> carsForPersonDto = _mapper.Map<List<SingleCarDto>>(cars);
+
+            return carsForPersonDto;
         }
     }
 }

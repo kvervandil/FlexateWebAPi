@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using FlexateWebApi.Application.Dto;
 using FlexateWebApi.Application.Dto.Offices;
 using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain.Model;
 using FlexateWebApi.Infrastructure.Entity.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,24 +17,26 @@ namespace FlexateWebApi.Application.Services
     {
         private readonly IOfficesRepository _officesRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<OfficesService> _logger;
 
-        public OfficesService(IOfficesRepository officesRepository, IMapper mapper)
+        public OfficesService(IOfficesRepository officesRepository, IMapper mapper, ILogger<OfficesService> logger)
         {
             _officesRepository = officesRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<OfficesForListDto> GetOffices(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken)
+        public async Task<PagedResultDto<SingleOfficeDto>> GetOffices(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken)
         {
             var offices = await _officesRepository.GetOffices(pageSize, pageNo, searchString, cancellationToken);
 
             var noOfOffices = await _officesRepository.GetNoOfOffices(cancellationToken);
 
-            List<OfficeForListDto> officesDto = _mapper.Map<List<OfficeForListDto>>(offices);
+            var officesDto = _mapper.Map<List<SingleOfficeDto>>(offices);
 
-            var officesForListDto = new OfficesForListDto()
+            var officesForListDto = new PagedResultDto<SingleOfficeDto>()
             {
-                OfficesList = officesDto,
+                Items = officesDto,
                 CurrentPage = pageNo,
                 Count = noOfOffices,
                 PageSize = pageSize
@@ -56,16 +60,10 @@ namespace FlexateWebApi.Application.Services
 
         public async Task<int?> AddNewOffice(CreateOfficeDto officeDto, CancellationToken cancellationToken)
         {
-            Office office = new Office()
-            {
-                City = officeDto.City,
-                Address = officeDto.Address,
-                PersonId = officeDto.PersonId,
-                IsDeleted = false
-            };
 
-            if (string.IsNullOrEmpty(office.City)
-                || string.IsNullOrEmpty(office.Address))
+            Office office = _mapper.Map<Office>(officeDto);
+            
+            if (string.IsNullOrEmpty(office.SpaceType))
             {
                 return null;
             }
@@ -81,8 +79,9 @@ namespace FlexateWebApi.Application.Services
             {
                 return await _officesRepository.DeleteOffice(id, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
         }
@@ -94,13 +93,15 @@ namespace FlexateWebApi.Application.Services
                 return false;
             }
 
-            Office office = new Office()
+            Office office = _mapper.Map<Office>(officeDto);
+            office.Id = id;
+
+            /*Office office = new Office()
             {
                 Id = id,
-                City = officeDto.City,
-                Address = officeDto.Address,
-                PersonId = officeDto.PersonId
-            };
+                SpaceType = officeDto.SpaceType,
+                IsGroundFloor = officeDto.IsGroundFloor
+            };*/
 
             return await _officesRepository.UpdateOffice(office, cancellationToken);
         }
@@ -111,10 +112,29 @@ namespace FlexateWebApi.Application.Services
             {
                 return await _officesRepository.UpdateWithDeletionFlag(id, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
+        }
+
+        public async Task<List<OfficeForListDto>> GetAllOffices(CancellationToken cancellationToken)
+        {
+            var offices = await _officesRepository.GetAllOffices(cancellationToken);
+
+            List<OfficeForListDto> officesDto = _mapper.Map<List<OfficeForListDto>>(offices);
+
+            return officesDto;
+        }
+
+        public async Task<List<SingleOfficeDto>> GetOfficesByPersonId(int personId, CancellationToken cancellationToken)
+        {
+            var offices = await _officesRepository.GetOfficesByPersonid(personId, cancellationToken);
+
+            var officesDto = _mapper.Map<List<SingleOfficeDto>>(offices);
+
+            return officesDto;
         }
     }
 }

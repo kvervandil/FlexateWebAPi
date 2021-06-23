@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlexateWebApi.Entity.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +12,5 @@ namespace FlexateWebApi.Domain.Model
         public string Address { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
-        public virtual ICollection<Car> Cars { get; set; }
-        public virtual ICollection<Office> Offices { get; set; }
     }
 }

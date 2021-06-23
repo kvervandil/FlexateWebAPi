@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using FlexateWebApi.Application.Dto;
 using FlexateWebApi.Application.Dto.People;
 using FlexateWebApi.Application.Interfaces;
 using FlexateWebApi.Domain.Model;
 using FlexateWebApi.Infrastructure.Entity.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,24 +17,25 @@ namespace FlexateWebApi.Application.Services
     {
         private readonly IPeopleRepository _peopleRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<PeopleService> _logger;
 
-        public PeopleService(IPeopleRepository peopleRepository, IMapper mapper)
+        public PeopleService(IPeopleRepository peopleRepository, IMapper mapper, ILogger<PeopleService> logger)
         {
             _peopleRepository = peopleRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<PeopleForListDto> GetPeople(int pageSize, int pageNo, string searchString,
+        public async Task<PagedResultDto<SinglePersonDto>> GetPeople(int pageSize, int pageNo, string searchString,
                                                       CancellationToken cancellationToken)
         {
             var people = await _peopleRepository.GetPeople(pageSize, pageNo, searchString, cancellationToken);
             var noOfAllPeople = await _peopleRepository.GetNoOfPeople(cancellationToken);
 
-            List<PersonForListDto> peopleForListDto = _mapper.Map<List<PersonForListDto>>(people);
+            var peopleForListDto = _mapper.Map<List<SinglePersonDto>>(people);
 
-            var model = new PeopleForListDto()
-            {
-                PeopleList = peopleForListDto,
+            var model = new PagedResultDto<SinglePersonDto>() { 
+                Items = peopleForListDto,
                 CurrentPage = pageNo,
                 PageSize = pageSize,
                 SearchString = searchString,
@@ -58,13 +61,15 @@ namespace FlexateWebApi.Application.Services
 
         public async Task<int?> AddNewPerson(CreatePersonDto personDto, CancellationToken cancellationToken)
         {
-            Person person = new Person()
+            /*Person person = new Person()
             {
                 Name = personDto.Name,
                 Age = personDto.Age,
                 Address = personDto.Address,
                 IsDeleted = false
-            };
+            };*/
+
+            Person person = _mapper.Map<Person>(personDto);
 
             if (string.IsNullOrEmpty(person.Name)
                 || string.IsNullOrEmpty(person.Address)
@@ -73,7 +78,7 @@ namespace FlexateWebApi.Application.Services
                 return null;
             }
 
-            int id = await _peopleRepository.AddPerson(person, cancellationToken);
+            var id = await _peopleRepository.AddPerson(person, cancellationToken);
 
             return id;
         }
@@ -86,14 +91,15 @@ namespace FlexateWebApi.Application.Services
                 return false;
             }
 
-            Person person = new Person()
+            /*Person person = new Person()
             {
                 Id = id,
                 Address = personDto.Address,
                 Age = personDto.Age,
                 Name = personDto.Name
-            };
+            };*/
 
+            Person person = _mapper.Map<Person>(personDto);
             
             return await _peopleRepository.UpdatePerson(person, cancellationToken);
         }
@@ -104,8 +110,9 @@ namespace FlexateWebApi.Application.Services
             {
                 return await _peopleRepository.DeletePerson(id, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }            
         }
@@ -116,9 +123,9 @@ namespace FlexateWebApi.Application.Services
             {
                 return await _peopleRepository.UpdateWithDeletionFlag(id, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                _logger.LogError(e.Message);
                 return false;
             }
         }

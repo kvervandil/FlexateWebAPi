@@ -1,6 +1,7 @@
 ﻿using FlexateWebApi.Domain.Model;
 using FlexateWebApi.Infrastructure.Entity.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,17 @@ namespace FlexateWebApi.Infrastructure.Repositories
     public class OfficesRepository : IOfficesRepository
     {
         private readonly Context _context;
+        private readonly ILogger<OfficesRepository> _logger;
 
-        public OfficesRepository(Context context)
+        public OfficesRepository(Context context, ILogger<OfficesRepository> logger)
         {
             _context = context;
+            _logger = logger;
+        }
+
+        public async Task<List<Office>> GetAllOffices(CancellationToken cancellationToken)
+        {
+            return await _context.Offices.ToListAsync(cancellationToken);
         }
 
         public async Task<int> AddOffice(Office office, CancellationToken cancellationToken)
@@ -37,26 +45,26 @@ namespace FlexateWebApi.Infrastructure.Repositories
             }
 
             _context.Remove(car);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             return true;
         }
 
         public async Task<int> GetNoOfOffices(CancellationToken cancellationToken)
         {
-            return await _context.Offices.CountAsync();
+            return await _context.Offices.CountAsync(cancellationToken);
         }
 
-        public async Task<Car> GetOfficeById(int id, CancellationToken cancellationToken)
+        public async Task<Office> GetOfficeById(int id, CancellationToken cancellationToken)
         {
-            return await _context.Cars.FindAsync(new object[] { id }, cancellationToken);
+            return await _context.Offices.SingleOrDefaultAsync(office => office.Id == id, cancellationToken);
         }
 
         public async Task<List<Office>> GetOffices(int pageSize, int pageNo, string searchString, CancellationToken cancellationToken)
         {
             var offices = _context.Offices.AsQueryable();
 
-            var officesFiltered = offices.Where(p => p.City.StartsWith(searchString));
+            var officesFiltered = offices.Where(p => p.SpaceType.StartsWith(searchString));
 
             return await officesFiltered.Skip(pageSize * (pageNo - 1)).Take(pageSize).ToListAsync(cancellationToken);
         }
@@ -65,17 +73,18 @@ namespace FlexateWebApi.Infrastructure.Repositories
         {
             try
             {
-                _context.Attach(office);
-                _context.Entry(office).Property("City").IsModified = true;
-                _context.Entry(office).Property("Address").IsModified = true;
-                _context.Entry(office).Property("PersonId").IsModified = true;
+                var officeToUpdate = await GetOfficeById(office.Id, cancellationToken);
+
+                officeToUpdate.SpaceType = office.SpaceType;
+                officeToUpdate.IsGroundFloor = office.IsGroundFloor;
 
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
         }
@@ -84,19 +93,26 @@ namespace FlexateWebApi.Infrastructure.Repositories
         {
             try
             {
-                var office = GetOfficeById(id, cancellationToken);
+                var office = await GetOfficeById(id, cancellationToken);
 
-                _context.Attach(office);
-                _context.Entry(office).Property("IsDeleted").IsModified = true;
+                office.IsDeleted = true;
 
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return true;
             }
-            catch (System.Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
+        }
+
+        public Task<List<Office>> GetOfficesByPersonid(int personId, CancellationToken cancellationToken)
+        {
+            var offices = _context.PersonOffice.Where(personOffice => personOffice.PersonId == personId).Select(item => item.Office);
+
+            return offices.ToListAsync(cancellationToken);
         }
     }
 }

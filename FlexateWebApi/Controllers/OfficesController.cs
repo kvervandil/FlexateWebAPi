@@ -1,4 +1,5 @@
-﻿using FlexateWebApi.Application.Dto.Offices;
+﻿using FlexateWebApi.Application.Dto;
+using FlexateWebApi.Application.Dto.Offices;
 using FlexateWebApi.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,10 @@ namespace FlexateWebApi.Controllers
     [Route("api/offices")]
     public class OfficesController : Controller
     {
-        IOfficesService _officesService;
+        private readonly IOfficesService _officesService;
+        private ILogger<OfficesController> _logger { get; }
 
-        public ILogger _logger { get; }
-
-        public OfficesController(IOfficesService officesService, ILogger logger)
+        public OfficesController(IOfficesService officesService, ILogger<OfficesController> logger)
         {
             _officesService = officesService;
             _logger = logger;
@@ -36,12 +36,10 @@ namespace FlexateWebApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OfficesForListDto>> Get(CancellationToken cancellationToken,
+        public async Task<ActionResult<PagedResultDto<SingleOfficeDto>>> Get(CancellationToken cancellationToken,
                                                               string searchString = "", int pageSize = 10,
                                                               int pageNo = 1)
         {
-            _logger.LogInformation("we are in Get action");
-
             var model = await _officesService.GetOffices(pageSize, pageNo, searchString, cancellationToken);
 
             if (model.Count == 0)
@@ -91,7 +89,7 @@ namespace FlexateWebApi.Controllers
                 return BadRequest();
             }
 
-            return Created($"api/offices/{id}", id);
+            return Created(nameof(Get), id);
         }
 
         /// <summary>

@@ -34,8 +34,9 @@ namespace FlexateWebApi
             {
                 builder.AllowAnyOrigin().AllowAnyMethod();
             }));
-            services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddInfrastructure();
             services.AddApplication();
             services.AddControllers();

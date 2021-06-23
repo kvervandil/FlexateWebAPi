@@ -1,4 +1,5 @@
-﻿using FlexateWebApi.Application.Mapping;
+﻿using AutoMapper;
+using FlexateWebApi.Application.Mapping;
 using FlexateWebApi.Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,10 @@ namespace FlexateWebApi.Application.Dto.Cars
     {
         public string Model { get; set; }
         public string Brand { get; set; }
-        public int PersonId { get; set; }
+
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<Car, CreateCarDto>();
+        }
     }
 }

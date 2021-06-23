@@ -12,7 +12,6 @@ namespace FlexateWebApi.Application.Dto.People
         public string Name { get; set; }
         public int Age { get; set; }
         public string Address { get; set; }
-        public int PersonId { get; set; }
 
         public void Mapping(Profile profile)
         {
